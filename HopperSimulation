@@ -23,13 +23,12 @@ function halie_hopperT1V1()
     disp('The hopper lifts off the ground at t=' + time_lighftoff);
     
     %second integration--pt. 2
-    options = odeset('Events', @event_stop_p1);
-    [t2, zout2] = ode45(@equations_p1, t_span, Z_o, options);
+%     options = odeset('Events', @event_stop_p1);
+%     [t2, zout2] = ode45(@equations_p1, t_span, Z_o, options);
     
     %make pretty graphs:
     hold on
-    tt=[t;t2]; zz=[zout;zout2];
-    plot(tt,zz);
+    plot(t,zout);
 %     plot(t2, zout2);
     legend('upper pos','upper velocity')    
     %%
@@ -39,10 +38,9 @@ function halie_hopperT1V1()
         
         %Integrated functions:
         z1=Z(2); %vel upper
-        z2=(k*l/mu)-g-(k*Z(1)/mu); %acc upper
+        z2=((-1)*mu*g)+(k*(l-(yu-yl))); %acc upper
         z3=Z(4); %vel lower
-        fn=(ml*g)-(mu*Z(4));
-        z4=0; %acc lower
+        z4=(k*l)+(k*yu)+(k*yl)-(ml*g)+((ml*g)-(k*(l-yu))); %acc lower
         
         states=[z1;z2;z3;z4];
     end
@@ -65,7 +63,7 @@ function halie_hopperT1V1()
         % stop when yl = 0 (lower mass hits the ground)
         eventvalue = X(3);  %  ‘Events’ are detected when eventvalue=0
         stopthecalc = 1;    %  stop if event occurs
-        eventdir = 0;      %  Detect only events with dydt=0
+        eventdir = -1;      %  Detect only events with dydt=0
     end
     %%
 end 
