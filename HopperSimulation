@@ -1,69 +1,38 @@
-function halie_hopperT1V1()
-    clear all; %prep environment
+function halie_hopperT2V1()
+	clear all; %prep workspace
 
-    %Initial conditions:
-    g=9.8; %m/s
-    ml=20; %mass, g
-    mu=10; %g, mass
-    vi=0; %m/s
-    l=50; %mm, displacement
-    d=5; %mm, displacement
-    k=9810; %N/m, spring constant
+	%ICs:
+	g=9.8;
+	mu=10;
+	ml=50;
+	l=50;
+	d=5;
+	k=9810;
+	zz=[5,0,0,0];
+	t_span=[0:0.1:50];
+
+	options = odeset('Events', @event_stop);
+	[t,zz]=ode45(@eqs_pt1, t_span,zz,options);
+
+	hold on;
+	plot(t,zz(1));
+    plot(t,zz(3));
+    legend('pos upper','pos lower');
+	function state=eqs_pt1(T,Z)
+		z1=Z(2);
+		z2=((-1)*mu*g)+(k*(l-Z(1)-Z(3)));
+		z3=Z(4);
+		z4=(k*l)+(k*Z(3))-(ml*g);
         
-    %State variables: upos, uvel, lpos, lvel, initial
-    z1_o=0; z2_o=0; z3_o=0; z4_o=0;
-    Z_o=[z1_o, z2_o, z3_o, z4_o];
-    
-    %Integrate for phase 1:
-    t_span = [0:0.1:50];
-    options = odeset('Events', @event_stop_p1);
-    
-    [t, zout] = ode45(@equations_p1, t_span, Z_o, options);
-    time_lighftoff=t(length(t)); %prints the time at which it hits
-    disp('The hopper lifts off the ground at t=' + time_lighftoff);
-    
-    %second integration--pt. 2
-%     options = odeset('Events', @event_stop_p1);
-%     [t2, zout2] = ode45(@equations_p1, t_span, Z_o, options);
-    
-    %make pretty graphs:
-    hold on
-    plot(t,zout);
-%     plot(t2, zout2);
-    legend('upper pos','upper velocity')    
-    %%
-    function states=equations_p1(T,Z) %function of first order eqs, integrated by ode45
-        yu=Z(1); %m, position of upper block
-        yl=Z(3); %m, position of lower block
-        
-        %Integrated functions:
-        z1=Z(2); %vel upper
-        z2=((-1)*mu*g)+(k*(l-(yu-yl))); %acc upper
-        z3=Z(4); %vel lower
-        z4=(k*l)+(k*yu)+(k*yl)-(ml*g)+((ml*g)-(k*(l-yu))); %acc lower
-        
-        states=[z1;z2;z3;z4];
-    end
-    %%
-    function states=equations_p2(T,N)
-       yu=M(1); %m, position of the upper block
-       yl=M(3); %m, position of the lower block
-       
-       %Integrated functions:
-       n1=M(2); %Velocity--upper, m/s
-       n2=(ml*g)+(k*(l-(yu-yl))); %acceleration upper, m*s^(-2)
-       n3=N(4); %velocity--lower, m/s
-       n4=((-1)*ml*g)-(k*(l-(yu-yl))); %acceleration--lower, m*s^(-2)
-        
-       states=[n1;n2;n3;n4];
-    end
-    %%
-    function [eventvalue,stopthecalc,eventdir] = event_stop_p1(T,X)
+        state=[z1;z2;z3;z4];
+	end
+
+	function [eventvalue,stopthecalc,eventdir] = event_stop(T,X)
      
         % stop when yl = 0 (lower mass hits the ground)
-        eventvalue = X(3);  %  ‘Events’ are detected when eventvalue=0
+        eventvalue = X(3);  %  â€˜Eventsâ€™ are detected when eventvalue=0
         stopthecalc = 1;    %  stop if event occurs
-        eventdir = -1;      %  Detect only events with dydt=0
-    end
-    %%
-end 
+        eventdir = -1;      %  Detect only events with dydt<0
+	end
+
+end
