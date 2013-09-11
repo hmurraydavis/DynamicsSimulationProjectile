@@ -28,11 +28,10 @@ function halie_hopperT1V1()
     
     %make pretty graphs:
     hold on
-    plot(t,zout);
-    plot(t2, zout2);
-    legend('upper pos','upper velocity','lower pos','lower vel');
-    
-    
+    tt=[t;t2]; zz=[zout;zout2];
+    plot(tt,zz);
+%     plot(t2, zout2);
+    legend('upper pos','upper velocity')    
     %%
     function states=equations_p1(T,Z) %function of first order eqs, integrated by ode45
         yu=Z(1); %m, position of upper block
@@ -40,10 +39,10 @@ function halie_hopperT1V1()
         
         %Integrated functions:
         z1=Z(2); %vel upper
-        z2=(ml*g)+(k*(l*(yu-yl))); %acc upper
+        z2=(k*l/mu)-g-(k*Z(1)/mu); %acc upper
         z3=Z(4); %vel lower
         fn=(ml*g)-(mu*Z(4));
-        z4=(-1)*ml*g-(k*(l-yu))+fn; %acc lower
+        z4=0; %acc lower
         
         states=[z1;z2;z3;z4];
     end
