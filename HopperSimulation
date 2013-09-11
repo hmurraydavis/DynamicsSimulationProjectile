@@ -15,29 +15,19 @@ function halie_hopperT2V1()
 	options = odeset('Events', @event_stop);
 	[t,zz]=ode45(@eqs_pt1, t_span,zz,options);
     
-    zz(:,1)
-    fn=(ml*g)+(k*l)-(k.*zz(:,1)) %*(l-d+zz(:,1)))
- 
-%         for i=1:length(fn)
-%             if fn(i)<=0
-%                 I=[I t(i)];
-%                 break;
-%             end
-%         end
-        
-    %second integration:
-%     t_span2=[I(2):0.01:2];
-
-%     zz2=zz(length(zz)); %[zz(1), zz(2), zz(3), zz(4)];
-%     [t2, zz2]=ode45(@eqs_pt2, t_span2,zz2,options);
-    
 	hold on;
 	plot(t,zz(:,1));
     plot(t,zz(:,3));
-%     plot(t, fn(:,1));
     
-%     plot(t2,zz2(:,1));
-%     plot(t2,zz2(:,3));
+    %second integration:
+    t_span2=[t(length(t)):0.01:2];
+
+    zz2=[zz(length(zz),1),zz(length(zz),2), zz(length(zz),3), zz(length(zz),4)]  %[zz(1), zz(2), zz(3), zz(4)];
+    [t2, zz2]=ode45(@eqs_pt2, t_span2,zz2,options);
+    
+    
+    plot(t2,zz2(:,1));
+    plot(t2,zz2(:,3));
     legend('pos upper','pos lower');
     
 	function state=eqs_pt1(T,Z)
