@@ -3,37 +3,46 @@ function halie_hopperT2V1()
 
 	%ICs:
 	g=9810; %mm*s^(-2)
-	mu=10;%mm
-	ml=50; %mm
+	mu=10;%g
+	ml=50; %g
 	l=50; %mm
 	d=5; %mm
 	k=9810000; %n/mm
-    I=[0]
+    I=[0];
 	zz=[l-d,0,0,0];
-	t_span=[0:0.01:2];
+	t_span=[0:0.0004:.01];
 
 	options = odeset('Events', @event_stop);
 	[t,zz]=ode45(@eqs_pt1, t_span,zz,options);
-
-    fn=(ml*g)-(k-zz(:,1)-zz(:,3));
+    
+    zz(:,1)
+    fn=(ml*g)+(k*l)-(k.*zz(:,1)) %*(l-d+zz(:,1)))
  
-        for i=1:length(fn)
-            if fn(i)<=0
-                I=[I t(i)]
-                break
-            end
-        end
+%         for i=1:length(fn)
+%             if fn(i)<=0
+%                 I=[I t(i)];
+%                 break;
+%             end
+%         end
         
-     %second integration:
+    %second integration:
+%     t_span2=[I(2):0.01:2];
+
+%     zz2=zz(length(zz)); %[zz(1), zz(2), zz(3), zz(4)];
+%     [t2, zz2]=ode45(@eqs_pt2, t_span2,zz2,options);
     
 	hold on;
 	plot(t,zz(:,1));
     plot(t,zz(:,3));
+%     plot(t, fn(:,1));
+    
+%     plot(t2,zz2(:,1));
+%     plot(t2,zz2(:,3));
     legend('pos upper','pos lower');
     
 	function state=eqs_pt1(T,Z)
 		z1=Z(2); %velocity upper
-		z2=((-1)*g)+(k*(l-Z(1)))/mu; %acceleration upper
+		z2=((-1)*mu*g)+(k*(l-Z(1)))/mu; %acceleration upper
 		z3=Z(4); %velocity lower
 		z4=0; %acceleration lower
         
@@ -41,13 +50,18 @@ function halie_hopperT2V1()
     end
 
     function state=eqs_pt2(T,Z)
+        z1=Z(2); %velocity upper
+		z2=((-1)*g)+(k*(l-Z(1)))/mu; %acceleration upper
+		z3=Z(4); %velocity lower
+		z4=(k*l)+(k*Z(1))+(k*Z(3))-ml*g; %acceleration lower
         
+        state=[z1;z2;z3;z4];
     end
 
 	function [eventvalue,stopthecalc,eventdir] = event_stop(T,X)
      
         % stop when yl = 0 (lower mass hits the ground)
-        eventvalue = X(3);  %  â€˜Eventsâ€™ are detected when eventvalue=0
+        eventvalue = (ml*g)+(k*l)-(k.*X(1));%fn, fn=(ml*g)+(k*l)-(k.*zz(:,1))  %  â€˜Eventsâ€™ are detected when eventvalue=0
         stopthecalc = 1;    %  stop if event occurs
         eventdir = -1;      %  Detect only events with dydt<0
 	end
