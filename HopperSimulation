@@ -2,27 +2,28 @@ function halie_hopperT2V1()
 	clear all; %prep workspace
 
 	%ICs:
-	g=9.8;
-	mu=10;
-	ml=50;
-	l=50;
-	d=5;
-	k=9810;
-	zz=[5,0,0,0];
-	t_span=[0:0.1:50];
+	g=9810; %mm*s^(-2)
+	mu=10;%mm
+	ml=50; %mm
+	l=50; %mm
+	d=5; %mm
+	k=9810000; %n/mm
+	zz=[l-d,0,0,0];
+	t_span=[0:0.01:2];
 
 	options = odeset('Events', @event_stop);
 	[t,zz]=ode45(@eqs_pt1, t_span,zz,options);
 
 	hold on;
-	plot(t,zz(1));
-    plot(t,zz(3));
+	plot(t,zz(:,1));
+    plot(t,zz(:,3));
     legend('pos upper','pos lower');
+    
 	function state=eqs_pt1(T,Z)
-		z1=Z(2);
-		z2=((-1)*mu*g)+(k*(l-Z(1)-Z(3)));
-		z3=Z(4);
-		z4=(k*l)+(k*Z(3))-(ml*g);
+		z1=Z(2); %velocity upper
+		z2=((-1)*g)+(k*(l-Z(1)))/mu; %acceleration upper
+		z3=Z(4); %velocity lower
+		z4=0; %acceleration lower
         
         state=[z1;z2;z3;z4];
 	end
