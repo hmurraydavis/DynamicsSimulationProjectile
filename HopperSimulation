@@ -8,12 +8,24 @@ function halie_hopperT2V1()
 	l=50; %mm
 	d=5; %mm
 	k=9810000; %n/mm
+    I=[0]
 	zz=[l-d,0,0,0];
 	t_span=[0:0.01:2];
 
 	options = odeset('Events', @event_stop);
 	[t,zz]=ode45(@eqs_pt1, t_span,zz,options);
 
+    fn=(ml*g)-(k-zz(:,1)-zz(:,3));
+ 
+        for i=1:length(fn)
+            if fn(i)<=0
+                I=[I t(i)]
+                break
+            end
+        end
+        
+     %second integration:
+    
 	hold on;
 	plot(t,zz(:,1));
     plot(t,zz(:,3));
@@ -26,7 +38,11 @@ function halie_hopperT2V1()
 		z4=0; %acceleration lower
         
         state=[z1;z2;z3;z4];
-	end
+    end
+
+    function state=eqs_pt2(T,Z)
+        
+    end
 
 	function [eventvalue,stopthecalc,eventdir] = event_stop(T,X)
      
