@@ -42,9 +42,9 @@ function halie_hopperT2V1()
 
     function state=eqs_pt2(T,Z)
         z1=Z(2); %velocity upper
-		z2=(k*l)-(k*Z(1))+(k*Z(3))-(mu*g); %((-1)*mu*g)+(k*(l-Z(1)))/mu; %acceleration upper 
+		z2=(k*l)-(k*Z(1))+(k*Z(3))-(mu*g); %acceleration upper 
 		z3=Z(4); %velocity lower
-		z4=((-1)*ml*g)-(k*(l-(Z(1)-Z(3)))); %(k*l)+(k*Z(1))+(k*Z(3))-ml*g; %acceleration lower
+		z4=((-1)*ml*g)-(k*(l-(Z(1)-Z(3)))); %acceleration lower
         
         state=[z1;z2;z3;z4];
     end
