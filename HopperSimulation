@@ -20,10 +20,11 @@ function halie_hopperT2V1()
     plot(t,zz(:,3));
     
     %second integration:
-    t_span2=[t(length(t)):0.01:2];
+    t_span2=[t(length(t)):0.001:.5];
 
-    zz2=[zz(length(zz),1),zz(length(zz),2), zz(length(zz),3), zz(length(zz),4)]  %[zz(1), zz(2), zz(3), zz(4)];
-    [t2, zz2]=ode45(@eqs_pt2, t_span2,zz2,options);
+    zz2=[zz(length(zz),1),zz(length(zz),2), zz(length(zz),3), zz(length(zz),4)];  %[zz(1), zz(2), zz(3), zz(4)];
+    options_p2 = odeset('Events', @event_stop_p2);
+    [t2, zz2]=ode45(@eqs_pt2, t_span2,zz2,options_p2);
     
     
     plot(t2,zz2(:,1));
@@ -41,9 +42,9 @@ function halie_hopperT2V1()
 
     function state=eqs_pt2(T,Z)
         z1=Z(2); %velocity upper
-		z2=((-1)*g)+(k*(l-Z(1)))/mu; %acceleration upper
+		z2=(k*l)-(k*Z(1))+(k*Z(3))-(mu*g); %((-1)*mu*g)+(k*(l-Z(1)))/mu; %acceleration upper 
 		z3=Z(4); %velocity lower
-		z4=(k*l)+(k*Z(1))+(k*Z(3))-ml*g; %acceleration lower
+		z4=((-1)*ml*g)-(k*(l-(Z(1)-Z(3)))); %(k*l)+(k*Z(1))+(k*Z(3))-ml*g; %acceleration lower
         
         state=[z1;z2;z3;z4];
     end
@@ -54,6 +55,13 @@ function halie_hopperT2V1()
         eventvalue = (ml*g)+(k*l)-(k.*X(1));%fn, fn=(ml*g)+(k*l)-(k.*zz(:,1))  %  â€˜Eventsâ€™ are detected when eventvalue=0
         stopthecalc = 1;    %  stop if event occurs
         eventdir = -1;      %  Detect only events with dydt<0
+    end
+    
+    function [eventvalue,stopthecalc,eventdir] = event_stop_p2(T,X)
+     
+        % stop when yl = 0 (lower mass hits the ground)
+        eventvalue = X(3);  %  â€˜Eventsâ€™ are detected when eventvalue=0
+        stopthecalc = 1;    %  stop if event occurs
+        eventdir = -1;      %  Detect only events with dydt<0
 	end
-
 end
