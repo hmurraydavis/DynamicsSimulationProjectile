@@ -1,0 +1,5 @@
+clear all;
+
+syms theta phi psi %declare angles as symbolic
+
+Rpsi=[cos(psi), sin(phi), 0; (-1)*sin(psi), cos(psi), 0; 0,0,1];
