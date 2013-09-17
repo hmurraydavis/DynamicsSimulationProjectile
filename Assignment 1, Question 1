@@ -1,0 +1,21 @@
+function res=A1_Q1_golfball
+
+	g=-9.8; %gravatatational acceleration
+	ro=1.225; %density of  at 15*C, kg/m3 --Wikipedia
+	cdrag=.47; %drag coefficient for sphere--Wikipedia
+	diamater=.03; %meters
+	m=1; %mass, kilograms
+	c=pi*ro*cdrag*(diamater^2)/8/m;
+
+	function [t,Z]=functions_integrate
+		vx=
+		vy=
+		vz=
+
+		ax=
+		ay=
+		az=
+
+		Z=[vx,xy,vz,ax,ay,az];
+	end
+end
