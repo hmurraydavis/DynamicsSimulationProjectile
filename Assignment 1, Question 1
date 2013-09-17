@@ -7,8 +7,14 @@ function res=A1_Q1_golfball
 	m=1; %mass, kilograms
 	c=pi*ro*cdrag*(diamater^2)/8/m;
 
+	%wind:
+	wx=6; wy=5; wz=3;
+
+	%ODE prep and call:
+
+	
 	function [t,Z]=functions_integrate
-		vx=
+		vx=(-1)*c*V(Z(1)-wx);
 		vy=
 		vz=
 
