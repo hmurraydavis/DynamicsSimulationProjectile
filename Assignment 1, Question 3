@@ -3,7 +3,7 @@ function res=A1_Q2_hopper
 	g=9.8; %gravatatational acceleration
 	k=700; %Spring constant
 	l=.05; %m, rest length of spring
-	mu-.05; %mass upper, kg
+	mu=.05; %mass upper, kg
 	ml=.02; %mass lower, kg
 
 	%ODE prep and call:
@@ -16,6 +16,8 @@ function res=A1_Q2_hopper
 		theta=atand(dx/dy); %calculate angle in degrees
 		fs=(-1)*k*(l-(cosd(theta)*(dx)));
 
+		fn=((-1)*ml*g)+fs*cosd(theta); %Force normal
+
 		vxu=zz(2);
 		axu=fs*cosd(theta)/mu;
 		
@@ -26,7 +28,7 @@ function res=A1_Q2_hopper
 		axl=(ff+fs*sind(theta))/ml;
 
 		vyl=zz(8);
-		ayl=
+		ayl=fs*cosd(theta)+fn-(ml*g);
 
 		Z=[vxu,axu, vyu,ayu, vxl,axl, vyl,ayl];
 	end
