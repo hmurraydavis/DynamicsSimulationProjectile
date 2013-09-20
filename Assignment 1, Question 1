@@ -18,22 +18,20 @@ function res=A1_Q1_golfball
 	[t,zz]=ode45(@functions_integrate, t_span,zz,options);
     
     hold on;
-	plot(t,zz(:,1),'r');
-	plot(t,zz(:,2), 'y');
-	plot(t,zz(:,3),'b');
-	legend('pos x', 'pos y', 'pos z')
+	plot3(zz(:,1), zz(:,2), zz(:,3));
+	
 %%
 	function states=functions_integrate(t,Z) 
     
 		vx=Z(4); %velocity x
 		vy=Z(5); %velocity y
-		vz= Z(6);%velocity z
+		vz=Z(6);%velocity z
 
 		V=((vx-wx)^2+(vy-wy)^2+(vz-wz)^2)^.5;
         
 		ax=(-1)*c*V*(Z(1)-wx);
-		ay=((-1)*c*V*(Z(2)-wy))+g;
-		az=(-1)*c*V*(Z(3)-wz);
+		ay=((-1)*c*V*(Z(2)-wy));
+		az=(-1)*c*V*(Z(3)-wz)+g;
 
 		states=[vx;vy;vz;ax;ay;az];
     end
