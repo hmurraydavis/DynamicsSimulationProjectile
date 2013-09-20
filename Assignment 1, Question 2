@@ -1,81 +1,154 @@
-function A1_Q2_Energyhopper()
-	%ICs:
-	g=9810; %mm*s^(-2)
-	mu=10;%g
-	ml=50; %g
-	l=50; %mm
-	d=5; %mm
-	k=9810000; %n/mm
-    I=[0];
-	zz=[l-d,0,0,0];
-	t_span=[0:0.0004:.01];
+% hopperfunction.m 
+%
+% Jumping simulation of for a hopper -> 2 masses connected by a linear spring
+% The vertical height of both masses are determined as result of an initial
+% downward displacement of the upper mass.
+%
+% Initally the lower mass sits on the ground and it's vertical position is
+% taken to be zero. 
+%
+% There are two phases of the jump. In phase 1, the lower mass remains in
+% contact with the ground. In phase 2, the lower lifts off the ground. 
+%
+% The simulation stops when the lower mass touches the ground. 
+%
+% Design Nature Fall 10
+% last modified 9/30/11, CLee
+%
+function hopper
+clear all
+close all
 
-	options = odeset('Events', @event_stop);
-	[t,zz]=ode45(@eqs_pt1, t_span,zz,options);
+% Define system parameters
+%
+g = 9.81;                % gravitational acceleration in m/s^2
+mugrams = 10;            % mugrams = upper mass in grams
+mu = mugrams/1000;        % upper mass in kg
+mlgrams = 20;            % mlgrams = lower mass in grams
+ml = mlgrams/1000;        % lower mass in kg
+k = 9810 ;               % k = linear spring stiffness in N/m
+L0mm = 50;               % L0 = initial length of spring in mm   
+L0 = L0mm/1000;          % unstretched spring length in meters
+dmm = 5;                  % d = initial displacement in mm; 
+d = dmm/1000;            % initial displacement in m
+%
+omegau = sqrt(k/mu);
+mtotal = mu + ml;   %total mass
+cc = ( (mtotal*g)/(mu*g-k*d) ); 
 
-    hold on;
-    
-    %second integration:
-    t_span2=[t(length(t)):0.001:.5];
+% Calculations for Phase 1: ml stays on ground
+% a closed form soln can be found for the motion of the upper mass
+%
+tlift = acos(cc) * sqrt(mu/k);  % tlift = time mu lifts off the ground
+tph1 = 0:tlift/20:tlift;       % time range for phase 1
 
-    zz2=[zz(length(zz),1),zz(length(zz),2), zz(length(zz),3), zz(length(zz),4)];  %[zz(1), zz(2), zz(3), zz(4)];
-    options_p2 = odeset('Events', @event_stop_p2);
-    [t2, zz2]=ode45(@eqs_pt2, t_span2,zz2,options_p2);
-    
-    %%extract paramaters!    
-    vu_p1=zz(:,2)/1000; vl_p1=zz(:,4)/1000; %m/s
-    ru_p1=zz(:,1)/1000; rl_p1=zz(:,3)/1000;
-    
-    vu_p2=zz2(:,2)/1000; vl_p2=zz2(:,4)/1000; %m/s
-    ru_p2=zz2(:,1)/1000; rl_p2=zz2(:,3)/1000;
-    
-    vu=[vu_p1; vu_p2]; vl=[vl_p1;vl_p2];
-    ru=[ru_p1;ru_p2]; rl=[rl_p1;rl_p2];
-    
-    %%All the energies!!!:
-    KE=((.5*ml).*(vl.^2))+((.5*mu).*(vu.^2));
-    DG=(ml.*g.*rl)+(mu.*g.*ru);
-    US=.5*k.*(ru-rl).^2;
-    ETOT=KE+DG+US;
-    
-    hold on;
-    plot(KE); 
-    plot (DG); 
-    plot(US);
-    plot(ETOT, 'r');
-    legend('KE', 'Grav', 'spng');
-    
-	function state=eqs_pt1(T,Z)
-		z1=Z(2); %velocity upper
-		z2=((-1)*mu*g)+(k*(l-Z(1)))/mu; %acceleration upper
-		z3=Z(4); %velocity lower
-		z4=0; %acceleration lower
-        
-        state=[z1;z2;z3;z4];
-    end
+% mu vertical position at lift off (end of phase 1)
+yuph1max = ( (mu*g/k)- d )* cos(omegau*tlift)  + L0 - mu*g/k;
+yuph1maxchk = ml*g/k + L0;         % check
 
-    function state=eqs_pt2(T,Z)
-        z1=Z(2); %velocity upper
-		z2=(k*l)-(k*Z(1))+(k*Z(3))-(mu*g); %acceleration upper 
-		z3=Z(4); %velocity lower
-		z4=((-1)*ml*g)-(k*(l-(Z(1)-Z(3)))); %acceleration lower
-        
-        state=[z1;z2;z3;z4];
-    end
+% y values for mu during phase 1
+yuph1 = ( (mu*g/k)-d )* cos(omegau*tph1)  + L0 - mu*g/k;
+% normal force acting on lower mass as f(tph1)
+FN = mtotal*g - (mu*g-k*d)* cos (omegau*tph1);
+%velocity of mu as f(tph1): closed form derivative of yuph1
+ydotuph1 = -(mu*g/k - d)*omegau * sin(omegau*tph1);
 
-	function [eventvalue,stopthecalc,eventdir] = event_stop(T,X)
+
+% IC's for phase 2
+yu2i = yuph1max;  %inital displacment condition for  phase 2
+% initial veloctiy condition for phase 2; take derivative and sub in tlift
+yudot2i = -(mu*g/k -d)*(sqrt(k/mu))* sin( sqrt(k/mu)*tlift) ;
+
+% initial velocity check: from conservation of energy in phase 1
+yudot2i_check =  sqrt( (k*d^2 - 2*d*mu*g - 2*mu*ml*g^2/k - ml^2*g^2/k)/mu ); 
+% Calculation for Phase 2: ml lifts off ground
+
+tph2_span = [tlift, 5];  % time span for phase 2. 
+% integration stops when yl =0. set tph2_max = 5 sec. 
+
+% initial conditions for states:
+x1_0 = yu2i;        %x1 = upper mass displacement
+x2_0 = yudot2i;     %x2 = upper mass velocity
+x3_0 = 0;           %x3 = lower mass displacement
+x4_0 = 0;           %x4 = lower mass velocity
+X_0 = [ x1_0, x2_0, x3_0, x4_0];
+
+options = odeset('Events', @event_stop);
+[tph2, yph2] = ode45(@phase2_fun, tph2_span, X_0, options);
+
+% Calculation for motion of center of mass
+% ycm = (mu*yu + ml*yl) / mtotal
+% closed form solution = parabola
+c1 = mu/mtotal*yudot2i + g*tlift;
+c2 = mu/mtotal*yu2i + g/2*tlift^2 - c1*tlift;
+% displacement of cm as f(tph2)
+ycm = -g/2*tph2.^2 + c1*tph2 + c2;
+% check: direct calc from ymu and yml 
+ycmck = ( mu*yph2(:,1)+ml*yph2(:,3) )/mtotal;
+%
+%
+
+
+
+
+% plot trajectories of upper and lower masses 
+% combine phase 1 and phase 2
+%
+figure 
+plot ( [tph1,tph2'], 1000*[yuph1,yph2(:,1)']  ) %upper mass
+hold
+plot ( [0,tph2'], 1000*[0,yph2(:,3)'] , 'r' )   %lower mass
+%
+plot (tph2,1000*ycm, 'k')                     %center of mass
+%plot (tph2,1000*ycmck, '--g')
+%
+xlabel('Time (sec)')
+ylabel('Displacement (mm)')
+legend ('upper mass', 'lower mass', 'center of mass')
+title('Vertical Displacement of Upper and Lower Masses')
+%
+% for scaling plots
+% axis ([0 0.5 0 350])
+clf; hold on;
+current_spring_length=L0+yph2(:,1)-yph2(:,2)
+KEU=(.5*mu).*((yph2(:,2)).^2)./1;
+KEL=(.5*ml).*(yph2(:,4).^2)./1;
+US=(.5*k)*current_spring_length.^2; %needs less
+UGU=mu.*yph2(:,1);
+UGL=ml.*yph2(:,3);
+ETotal=KEU+KEL+US+UGU+UGL;
+plot(tph2,ETotal, 'k')
+plot(tph2,KEU, 'y');
+plot(tph2,KEL,'c');
+plot(tph2,US,'g');
+plot(tph2,UGU,'b');
+plot(tph2,UGL,'r');
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% function for phase 2 of hopper motion
+function phase2states = phase2_fun(T, X)
+%
+% X(1) = y_upper, X(2) = ydot_upper, X(3) = y_lower, X(4) = ydot_lower
+%
+x1 = X(2); 
+x2 = (k*L0/mu) - g - k/mu*X(1) + k/mu*X(3);
+x3 = X(4);
+x4 = -(k*L0/ml) - g - k/ml*X(3) + k/ml*X(1);
+
+phase2states = [x1;x2;x3;x4];
+
+end
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+function [eventvalue,stopthecalc,eventdir] = event_stop(T,X)
      
         % stop when yl = 0 (lower mass hits the ground)
-        eventvalue = (ml*g)+(k*l)-(k.*X(1));%fn, fn=(ml*g)+(k*l)-(k.*zz(:,1))  %  â€˜Eventsâ€™ are detected when eventvalue=0
-        stopthecalc = 1;    %  stop if event occurs
+        eventvalue = X(3);  % ‘Events’ are detected when eventvalue=0
+        stopthecalc = 1;    % stop if event occurs
         eventdir = -1;      %  Detect only events with dydt<0
-    end
-    
-    function [eventvalue,stopthecalc,eventdir] = event_stop_p2(T,X)
-     
-        % stop when yl = 0 (lower mass hits the ground)
-        eventvalue = X(3);  %  Events are detected when eventvalue=0
-        stopthecalc = 1;    %  stop if event occurs
-        eventdir = -1;      %  Detect only events with dydt<0
-	end
+end
+      
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 end
