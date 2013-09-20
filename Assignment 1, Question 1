@@ -1,18 +1,20 @@
 function res=A1_Q1_golfball
 
 	g=-9.8; %gravatatational acceleration
-	ro=1.225; %density of  at 15*C, kg/m3 --Wikipedia
-	cdrag=.47; %drag coefficient for sphere--Wikipedia
-	diamater=.03; %meters
-	m=1; %mass, kilograms
+	ro=1.02; %density of  at 15*C, kg/m3 --Wikipedia
+	cdrag=.25; %drag coefficient for sphere--Wikipedia
+	diamater=4.115/100; %meters
+	m=.0459; %mass, kilograms
 	c=pi*ro*cdrag*(diamater^2)/8/m;
-
+    theta=35; vi=67.056; %theta=launch angle from x, degrees; vi=initial velocity, m/s
+    vxi=vi*sind(theta); vzi=vi*cosd(theta); vyi=0;
+    
 	%wind:
-	wx=6; wy=5; wz=3;
+	wx=15; wy=0; wz=0;
 
 	%ODE prep and call:
 	t_span=[0:0.004:.01];
-	zz=[0,0,0,5,6,7];
+	zz=[0,0,0,vxi,vyi,vzi]; %initial positions, initial velocities
 
 	options = odeset('Events', @event_stop);
 	[t,zz]=ode45(@functions_integrate, t_span,zz,options);
