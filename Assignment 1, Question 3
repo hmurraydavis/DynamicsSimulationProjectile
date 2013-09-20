@@ -8,15 +8,24 @@ function res=A1_Q2_hopper
     mugh=.7; %friction constant
 	zz=[6,0, 0,0, 0,0, 0,0]; %row
 
-
 	%ODE prep and call:
 	t_span=[0:0.01:.01];
 
 	options = odeset('Events', @event_stop_p1);
 	[t,Z]=ode45(@functions_integrate_case1, t_span,zz,options);
 
+	t_span2=[t(length(t)):0.001:.5];
+	zz2=[zz(length(zz),1),zz(length(zz),2), zz(length(zz),3), zz(length(zz),4), [zz(length(zz),5),zz(length(zz),6), zz(length(zz),7), zz(length(zz),8)];
+	
+    options = odeset('Events', @event_stop_p2);
+	[t2,Z2]=ode45(@functions_integrate_case2, t_span2,zz2,options);
 
-	function state_1=functions_integrate_case1(t,zz)
+	plot(t,Z(:,1),'r')
+	plot(t,Z(:,3),'c')
+
+	legend('Pos xu', 'pos yu')
+    %%
+    function state_1 = functions_integrate_case1(t,zz)
 		%fun with theta...it changes!
 		dx=zz(5)-zz(1); %difference in x of mass' centers, m
 		dy=zz(7)-zz(3); % " in y
@@ -24,6 +33,13 @@ function res=A1_Q2_hopper
 		fs=(-1)*k*(l-(cosd(theta)*(dx)));
 
 		fn=((-1)*ml*g)+fs*cosd(theta); %Force normal
+        if fn <=0
+            fn=0;
+        %end
+        
+        elseif Z(5)>=0
+            fn=0;
+        end
         ff=mugh*fn;
 
 		vxu=zz(2);
@@ -36,11 +52,11 @@ function res=A1_Q2_hopper
 		axl=(ff+fs*sind(theta))/ml;
 
 		vyl=zz(8);
-		ayl=fs*cosd(theta)+fn-(ml*g);
+		ayl=(fs*cosd(theta)+fn-(ml*g))/ml;
 
 		state_1=[vxu;axu; vyu;ayu; vxl;axl; vyl;ayl];
 	end
-
+%%
 	function state_2=functions_integrate_cas2(t,zz)
 		%fun with theta...it changes!
 		dx=zz(5)-zz(1); %difference in x of mass' centers, m
@@ -61,23 +77,23 @@ function res=A1_Q2_hopper
 		axl=(ff+fs*sind(theta))/ml;
 
 		vyl=zz(8);
-		ayl=fs*cosd(theta)+fn-(ml*g);
+		ayl=(fs*cosd(theta)-(ml*g))/ml;
 
 		state_2=[vxu;axu; vyu;ayu; vxl;axl; vyl;ayl];
 	end
-
+%%
 	function [eventvalue,stopthecalc,eventdir] = event_stop_p1(T,X)
      
         % stop when yl = 0 (lower mass hits the ground)
-        eventvalue = (ml*g)+(k*l)-(k.*X(1));%fn, fn=(ml*g)+(k*l)-(k.*zz(:,1))  %  â€˜Eventsâ€™ are detected when eventvalue=0
+        eventvalue = (ml*g)+(k*l)-(k.*X(1));%fn, fn=(ml*g)+(k*l)-(k.*zz(:,1))  %  Ã¢â‚¬ËœEventsÃ¢â‚¬â„¢ are detected when eventvalue=0
         stopthecalc = 1;    %  stop if event occurs
         eventdir = -1;      %  Detect only events with dydt<0
     end
-    
+   %% 
     function [eventvalue,stopthecalc,eventdir] = event_stop_p2(T,X)
      
         % stop when yl = 0 (lower mass hits the ground)
-        eventvalue = X(3);  %  â€˜Eventsâ€™ are detected when eventvalue=0
+        eventvalue = X(3);  %  Ã¢â‚¬ËœEventsÃ¢â‚¬â„¢ are detected when eventvalue=0
         stopthecalc = 1;    %  stop if event occurs
         eventdir = -1;      %  Detect only events with dydt<0
 	end
