@@ -12,16 +12,17 @@ function res=A1_Q1_golfball
 
 	%ODE prep and call:
 
-	
-	function [t,Z]=functions_integrate
-		vx=(-1)*c*V(Z(1)-wx);
-		vy=
-		vz=
 
-		ax=
-		ay=
-		az=
+	function [t,Z]=functions_integrate 
+		vx=Z(4); %velocity x
+		vy=Z(5); %velocity y
+		vz= Z(6);%velocity z
+
+		ax=(-1)*c*V*(Z(1)-wx);
+		ay=((-1)*c*V*(Z(2)-wy))+g;
+		az=(-1)*c*V*(z(3)-wz);
 
 		Z=[vx,xy,vz,ax,ay,az];
 	end
+
 end
