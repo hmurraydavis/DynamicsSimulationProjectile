@@ -1,4 +1,5 @@
 function res=A1_Q2_hopper
+    clear all
 
 	g=9.8; %gravatatational acceleration
 	k=700; %Spring constant
@@ -13,7 +14,8 @@ function res=A1_Q2_hopper
 
 	options = odeset('Events', @event_stop_p1);
 	[t,Z]=ode45(@functions_integrate_case1, t_span,zz,options);
-
+    
+    hold on;
 	plot(t,Z(:,1),'r')
 	plot(t,Z(:,3),'c')
 
@@ -54,7 +56,7 @@ function res=A1_Q2_hopper
 	function [eventvalue,stopthecalc,eventdir] = event_stop_p1(T,X)
      
         % stop when yl = 0 (lower mass hits the ground)
-        eventvalue = (ml*g)+(k*l)-(k.*X(1));%fn, fn=(ml*g)+(k*l)-(k.*zz(:,1))  %  Ã¢â‚¬ËœEventsÃ¢â‚¬â„¢ are detected when eventvalue=0
+        eventvalue = (ml*g)+(k*l)-(k.*X(1));%fn, fn=(ml*g)+(k*l)-(k.*zz(:,1))  %  â€˜Eventsâ€™ are detected when eventvalue=0
         stopthecalc = 1;    %  stop if event occurs
         eventdir = -1;      %  Detect only events with dydt<0
     end
@@ -62,7 +64,7 @@ function res=A1_Q2_hopper
     function [eventvalue,stopthecalc,eventdir] = event_stop_p2(T,X)
      
         % stop when yl = 0 (lower mass hits the ground)
-        eventvalue = X(3);  %  Ã¢â‚¬ËœEventsÃ¢â‚¬â„¢ are detected when eventvalue=0
+        eventvalue = X(3);  %  â€˜Eventsâ€™ are detected when eventvalue=0
         stopthecalc = 1;    %  stop if event occurs
         eventdir = -1;      %  Detect only events with dydt<0
 	end
