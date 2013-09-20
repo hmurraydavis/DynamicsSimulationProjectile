@@ -11,18 +11,39 @@ function res=A1_Q1_golfball
 	wx=6; wy=5; wz=3;
 
 	%ODE prep and call:
+	t_span=[0:0.004:.01];
+	zz=[0,0,0,5,6,7];
 
-
-	function [t,Z]=functions_integrate 
+	options = odeset('Events', @event_stop);
+	[t,zz]=ode45(@functions_integrate, t_span,zz,options);
+    
+    hold on;
+	plot(t,zz(:,1),'r');
+	plot(t,zz(:,2), 'y');
+	plot(t,zz(:,3),'b');
+	legend('pos x', 'pos y', 'pos z')
+%%
+	function states=functions_integrate(t,Z) 
+    
 		vx=Z(4); %velocity x
 		vy=Z(5); %velocity y
 		vz= Z(6);%velocity z
 
+		V=((vx-wx)^2+(vy-wy)^2+(vz-wz)^2)^.5;
+        
 		ax=(-1)*c*V*(Z(1)-wx);
 		ay=((-1)*c*V*(Z(2)-wy))+g;
-		az=(-1)*c*V*(z(3)-wz);
+		az=(-1)*c*V*(Z(3)-wz);
 
-		Z=[vx,xy,vz,ax,ay,az];
-	end
+		states=[vx;vy;vz;ax;ay;az];
+    end
+%%
+    function [eventvalue,stopthecalc,eventdir] = event_stop(T,X)
+     
+        % stop when yl = 0 (lower mass hits the ground)
+        eventvalue = X(3); % Events are detected when eventvalue=0
+        stopthecalc = 1;    %  stop if event occurs
+        eventdir = -1;      %  Detect only events with dydt<0
+    end
 
 end
