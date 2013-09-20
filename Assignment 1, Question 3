@@ -14,12 +14,6 @@ function res=A1_Q2_hopper
 	options = odeset('Events', @event_stop_p1);
 	[t,Z]=ode45(@functions_integrate_case1, t_span,zz,options);
 
-	t_span2=[t(length(t)):0.001:.5];
-	zz2=[zz(length(zz),1),zz(length(zz),2), zz(length(zz),3), zz(length(zz),4), [zz(length(zz),5),zz(length(zz),6), zz(length(zz),7), zz(length(zz),8)];
-	
-    options = odeset('Events', @event_stop_p2);
-	[t2,Z2]=ode45(@functions_integrate_case2, t_span2,zz2,options);
-
 	plot(t,Z(:,1),'r')
 	plot(t,Z(:,3),'c')
 
@@ -56,32 +50,7 @@ function res=A1_Q2_hopper
 
 		state_1=[vxu;axu; vyu;ayu; vxl;axl; vyl;ayl];
 	end
-%%
-	function state_2=functions_integrate_cas2(t,zz)
-		%fun with theta...it changes!
-		dx=zz(5)-zz(1); %difference in x of mass' centers, m
-		dy=zz(7)-zz(3); % " in y
-		theta=atand(dx/dy); %calculate angle in degrees
-		fs=(-1)*k*(l-(cosd(theta)*(dx)));
 
-		fn=((-1)*ml*g)+fs*cosd(theta); %Force normal
-        ff=mugh*fn;
-
-		vxu=zz(2);
-		axu=fs*cosd(theta)/mu;
-		
-		vyu=zz(4);
-		ayu=((fs*sind(theta))-mu*g)/mu;
-
-		vxl=zz(6);
-		axl=(ff+fs*sind(theta))/ml;
-
-		vyl=zz(8);
-		ayl=(fs*cosd(theta)-(ml*g))/ml;
-
-		state_2=[vxu;axu; vyu;ayu; vxl;axl; vyl;ayl];
-	end
-%%
 	function [eventvalue,stopthecalc,eventdir] = event_stop_p1(T,X)
      
         % stop when yl = 0 (lower mass hits the ground)
