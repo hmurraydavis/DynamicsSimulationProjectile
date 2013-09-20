@@ -1,6 +1,4 @@
-function halie_hopperT2V1()
-	clear all; %prep workspace
-
+function A1_Q2_Energyhopper()
 	%ICs:
 	g=9810; %mm*s^(-2)
 	mu=10;%g
@@ -14,12 +12,8 @@ function halie_hopperT2V1()
 
 	options = odeset('Events', @event_stop);
 	[t,zz]=ode45(@eqs_pt1, t_span,zz,options);
-    
-	hold on;
-	plot(t,zz(:,1));
-    plot(t,zz(:,3));
-    
-    plot(t,zz(:,2)/1000, 'r');
+
+    hold on;
     
     %second integration:
     t_span2=[t(length(t)):0.001:.5];
@@ -28,10 +22,28 @@ function halie_hopperT2V1()
     options_p2 = odeset('Events', @event_stop_p2);
     [t2, zz2]=ode45(@eqs_pt2, t_span2,zz2,options_p2);
     
+    %%extract paramaters!    
+    vu_p1=zz(:,2)/1000; vl_p1=zz(:,4)/1000; %m/s
+    ru_p1=zz(:,1)/1000; rl_p1=zz(:,3)/1000;
     
-    plot(t2,zz2(:,1));
-    plot(t2,zz2(:,3));
-    legend('pos upper','pos lower', 'velocity x');
+    vu_p2=zz2(:,2)/1000; vl_p2=zz2(:,4)/1000; %m/s
+    ru_p2=zz2(:,1)/1000; rl_p2=zz2(:,3)/1000;
+    
+    vu=[vu_p1; vu_p2]; vl=[vl_p1;vl_p2];
+    ru=[ru_p1;ru_p2]; rl=[rl_p1;rl_p2];
+    
+    %%All the energies!!!:
+    KE=((.5*ml).*(vl.^2))+((.5*mu).*(vu.^2));
+    DG=(ml.*g.*rl)+(mu.*g.*ru);
+    US=.5*k.*(ru-rl).^2;
+    ETOT=KE+DG+US;
+    
+    hold on;
+    plot(KE); 
+    plot (DG); 
+    plot(US);
+    plot(ETOT, 'r');
+    legend('KE', 'Grav', 'spng');
     
 	function state=eqs_pt1(T,Z)
 		z1=Z(2); %velocity upper
@@ -62,7 +74,7 @@ function halie_hopperT2V1()
     function [eventvalue,stopthecalc,eventdir] = event_stop_p2(T,X)
      
         % stop when yl = 0 (lower mass hits the ground)
-        eventvalue = X(3);  %  â€˜Eventsâ€™ are detected when eventvalue=0
+        eventvalue = X(3);  %  Events are detected when eventvalue=0
         stopthecalc = 1;    %  stop if event occurs
         eventdir = -1;      %  Detect only events with dydt<0
 	end
