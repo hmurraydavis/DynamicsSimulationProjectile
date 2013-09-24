@@ -1,0 +1,20 @@
+function A2Q3_marblebowl()
+	r=200/10/100; %radius in meters
+	v=1000/10/1000;  %m/s, velocity
+	%no friction
+	g=-9.8; %m/s, gravity.
+
+	function integrate_functions(T,zz)
+		%r=constant, so not included.
+		dtheta=zz(3); 
+		dphi=zz(4);
+
+		ddtheta=-2*dphi*dtheta*cos(phi)/sin(phi);
+		ddphi=((g*sin(phi))+(r*(dtheta^2)*sin(phi)*cos(phi)))/r;
+
+
+		zz=[dtheta; dz; ddtheta; ddz];
+	end
+
+
+end
