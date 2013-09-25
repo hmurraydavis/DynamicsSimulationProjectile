@@ -1,24 +1,32 @@
 function spherical_pendulum()
-    phi=30;
     vtheta=.5; %m/s
     r=2; %m, length pendulum
     m=3; %kg, mass
+    g=-9.8;
 
-    t_step=[0:.0001:5]
-
-    Z=[0,phi,0,  ]; %[theta,phi,psi,  rx,ry,rz,  vx,vy,vz]
+    t_step=[0:.0001:5];
+    Z=[2,0,30,  0,.5,0]; %[radius,theta,phi,  dradius,dtheta,dphi]
     
-    function [t,Z]=integrate_eqs()
-        x=Z(1); y=Z(2); z=Z(3);
+    function [t,Z]=integrate_eqs(t,Z)
+        radius=Z(1); theta=Z(2); phi=Z(3);
         
-        drx=
-        dry=2*sind(phi);
-        drz=2*cosd(phi)
+        dradius=Z(4);
+        dtheta=Z(5);
+        dphi=Z(6);
+
+        ddradius=0;
+        ddtheta=-2*dphi*dtheta*cos(phi)/sin(phi);
+        ddphi=((g*sin(phi))+(r*dtheta^2*sin(phi)*cos(phi)))/radius;
         
-        dvx=
-        dvy=
-        dvz=
-        
-        z=[dtheta,dphi,dpsi,  drx,dry,drz,  dvx,dvy,dvz]
+        z=[dradius;dtheta;dphi;  ddradius;ddtheta;ddphi];
     end
+
+    function [eventvalue,stopthecalc,eventdir] = event_stop_p2(T,X)
+     
+        % stop when yl = 0 (lower mass hits the ground)
+        eventvalue = X(3);  %  Events are detected when eventvalue=0
+        stopthecalc = 1;    %  stop if event occurs
+        eventdir = -1;      %  Detect only events with dydt<0
+    end
+end
 end
