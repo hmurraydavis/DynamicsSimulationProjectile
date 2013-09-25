@@ -1,0 +1,24 @@
+function spherical_pendulum()
+    phi=30;
+    vtheta=.5; %m/s
+    r=2; %m, length pendulum
+    m=3; %kg, mass
+
+    t_step=[0:.0001:5]
+
+    Z=[0,phi,0,  ]; %[theta,phi,psi,  rx,ry,rz,  vx,vy,vz]
+    
+    function [t,Z]=integrate_eqs()
+        x=Z(1); y=Z(2); z=Z(3);
+        
+        drx=
+        dry=2*sind(phi);
+        drz=2*cosd(phi)
+        
+        dvx=
+        dvy=
+        dvz=
+        
+        z=[dtheta,dphi,dpsi,  drx,dry,drz,  dvx,dvy,dvz]
+    end
+end
