@@ -14,6 +14,8 @@ ddthetaddt=0;
 %arh=(ddtt*c*sind(tt))+((dtt^2)*c*cosd(tt))-((b-(c*cosd(tt)))*(dtt^2))
 %ath=((dtt^2)*c*sind(tt))+((dtt^2)*c*sind(tt))+((b-(c*cosd(tt)))*ddtt)
 
-dtt=135*2*pi/180;ddtt=0;
+tt=135*2*pi/180; dtt=1*2*pi; ddtt=0;
 arh=((dtt^2)*c*cos(tt))-((b-(c*cos(tt)))*(dtt^2))
 ath=((dtt^2)*c*sin(tt))+((dtt^2)*c*sin(tt))
+
+% arh=
