@@ -13,7 +13,7 @@ t5=(b-b*cos(tt))*ddtt; %0
 t6=(b-c*cos(tt))*(dtt^2); %38.4784
 
 arh=t1+t2-t6
-ath=t3+t4+t5;
+ath=t3+t4+t5
 
 % arh=((dtt^2)*c*cos(tt))-((b-(c*cos(tt)))*(dtt^2))
 % ath=((dtt^2)*c*sin(tt))+((dtt^2)*c*sin(tt))
