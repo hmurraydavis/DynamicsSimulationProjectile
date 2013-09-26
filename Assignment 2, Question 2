@@ -3,22 +3,15 @@ c=.248; %m
 %acceleration in r hat:1.1
 %acceleration in theta: 7.4
 
-tt=135*2*pi/180; dtt=1*2*pi; ddtt=0;
+tt=135/0.0174532925; dtt=6.2831853; ddtt=0;
 
-t1=ddtt*c*sin(tt); %==0
-t2=(dtt^2)*c*cos(tt); %x10^-15
-t3=(dtt^2)*c*sin(tt); %-9.7906
-t4=(dtt^2)*c*sin(tt); %-9.7906
-t5=(b-b*cos(tt))*ddtt; %0
-t6=(b-c*cos(tt))*(dtt^2); %38.4784
+t1=2*c*dtt*sin(tt)*dtt; %13.8461
+t2=c*((dtt^2)*cos(tt)+ddtt*sin(tt)); %-6.923
+t3=(b-c*cos(tt))*ddtt; %1
+t4=((b-c*cos(tt))*dtt^2); %46
 
-arh=t1+t2-t6
-ath=t3+t4+t5
-
-% arh=((dtt^2)*c*cos(tt))-((b-(c*cos(tt)))*(dtt^2))
-% ath=((dtt^2)*c*sin(tt))+((dtt^2)*c*sin(tt))
-
-
+athetahat=t1+t3
+arhat=t2-t4
 
 
 % CORRECT ANSWER:
