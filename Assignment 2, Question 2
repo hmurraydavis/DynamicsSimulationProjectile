@@ -6,16 +6,17 @@ ddthetaddt=0;
 %acceleration in r hat:1.1
 %acceleration in theta: 7.4
 
-% arhat=(ddthetaddt*c*sind(theta)+((dthetadt^2)*c*cosd(theta))-((b-(c*cosd(theta)))*dthetadt^2));
-% athetahat=((dthetadt^2)*c*sind(theta))+((dthetadt^2)*c*sind(theta))+((b-(c*cosd(theta)))*ddthetaddt);
-
-
-%tt=135;dtt=360;ddtt=0;
-%arh=(ddtt*c*sind(tt))+((dtt^2)*c*cosd(tt))-((b-(c*cosd(tt)))*(dtt^2))
-%ath=((dtt^2)*c*sind(tt))+((dtt^2)*c*sind(tt))+((b-(c*cosd(tt)))*ddtt)
-
 tt=135*2*pi/180; dtt=1*2*pi; ddtt=0;
-arh=((dtt^2)*c*cos(tt))-((b-(c*cos(tt)))*(dtt^2))
-ath=((dtt^2)*c*sin(tt))+((dtt^2)*c*sin(tt))
 
-% arh=
+t1=ddtt*c*sin(tt);
+t2=(dtt^2)*c*cos(tt);
+t3=(dtt^2)*c*sin(tt); 
+t4=(dtt^2)*c*sin(tt);
+t5=(b-b*cos(tt))*ddtt;
+t6=(b-c*cos(tt))*(dtt^2);
+
+arh=t1+t2-t3
+ath=t3+t4+t5
+
+% arh=((dtt^2)*c*cos(tt))-((b-(c*cos(tt)))*(dtt^2))
+% ath=((dtt^2)*c*sin(tt))+((dtt^2)*c*sin(tt))
