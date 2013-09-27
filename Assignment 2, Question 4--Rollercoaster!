@@ -1,0 +1,52 @@
+function A2Q4_rollercoasters
+    B=0; c=0; h=1; L=1; m=1;
+    x=0;y=h;vx=.01;vy=0;
+    g=-9.8; %m*s^-2, gravity
+
+    t_span=[0:.004:10];
+    zz=[0,h,.01,0]; %xpos, ypos, xvel, yvel
+    
+    options = odeset('Events', @event_stop);
+	[t,zz]=ode45(@integrate_functions, t_span,zz,options);
+    hold on
+    plot(zz(:,1),zz(:,2))
+    
+    xfl=0
+    i=1
+    for xfl=0:.01:.03
+       yfl=(cos(3*pi*xfl/2));
+       X(i)=xfl;
+       Y(i)=yfl;
+       i=i+1;
+    end
+    plot(X,Y, 'r')
+    
+    function state=integrate_functions(t,zz)
+    	x=zz(1);	y=zz(2);
+    	vx=zz(3);	vy=zz(4);
+    	ang=atan(y/x);
+
+    	a=h*(1-(B*x/L))*(2*cos(3*pi*x/2/L)*(-3*pi/2/L)*sin(3*pi*x/2/L))-((h*B/L)*(cos(3*pi*x/2/L)^2));
+
+    	%acceleration from force drag:
+    	adx=c*(vx^2)/(1+(a^2))^.5;
+    	ady=c*(vy^2)/(1+(a^2))^.5;
+
+    	%acceleration from normal force:
+    	an_x=m*g*cos(ang)*(1+a)/(1+(a^2))^.5;
+        an_y=m*g*sin(ang)*(1+a)/(1+(a^2))^.5;
+
+        ax=adx+an_x;
+        ay=adx+g+an_y;
+
+        state=[vx;vy;ax;ay];
+    end
+
+    function [eventvalue,stopthecalc,eventdir] = event_stop(T,X)
+     
+        % stop when yl = 0 (lower mass hits the ground)
+        eventvalue = X(3);  %  Ã¢â‚¬ËœEventsÃ¢â‚¬â„¢ are detected when eventvalue=0
+        stopthecalc = 1;    %  stop if event occurs
+        eventdir = -1;      %  Detect only events with dydt<0
+	end
+end
