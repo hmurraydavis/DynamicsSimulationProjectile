@@ -1,0 +1,18 @@
+%plots polar limescons!
+
+b=9;
+c=-6;
+theta=0;
+% Theta=[]; R=[];
+
+for i=1:101
+    r=b-(c*cos(theta));
+    Theta(i)=theta;
+    R(i)=r;
+    theta=theta+(360/101);
+    %i=i+1;
+end
+
+polar(Theta,R, '*')
+str=sprintf('Limacon with b= %d and c= %d' ,b,c)
+title(str, 'FontSize', 18)
