@@ -11,9 +11,9 @@ function A2Q4_rollercoasters
     hold on
     plot(zz(:,1),zz(:,2))
     
-    xfl=0
-    i=1
-    for xfl=0:.01:.03
+    xfl=0;
+    i=1;
+    for xfl=0:.01:.05
        yfl=(cos(3*pi*xfl/2));
        X(i)=xfl;
        Y(i)=yfl;
@@ -33,11 +33,15 @@ function A2Q4_rollercoasters
     	ady=c*(vy^2)/(1+(a^2))^.5;
 
     	%acceleration from normal force:
-    	an_x=m*g*cos(ang)*(1+a)/(1+(a^2))^.5;
-        an_y=m*g*sin(ang)*(1+a)/(1+(a^2))^.5;
+    	an_x=(-1)*m*g*cos(ang)*(1+a)/(1+(a^2))^.5;
+        an_y=abs(m*g*sin(ang)*(1+a)/(1+(a^2))^.5) % might need a negative 1.
+        
+        %acceleration from gravity:
+        agx=(-1)*g*cos(ang);
+        agy=g*sin(ang)
 
-        ax=adx+an_x;
-        ay=adx+g+an_y;
+        ax=adx+agx+an_x;
+        ay=ady+agy+an_y;
 
         state=[vx;vy;ax;ay];
     end
@@ -45,7 +49,7 @@ function A2Q4_rollercoasters
     function [eventvalue,stopthecalc,eventdir] = event_stop(T,X)
      
         % stop when yl = 0 (lower mass hits the ground)
-        eventvalue = X(3);  %  Ã¢â‚¬ËœEventsÃ¢â‚¬â„¢ are detected when eventvalue=0
+        eventvalue = X(2);  %  Events are detected when eventvalue=0
         stopthecalc = 1;    %  stop if event occurs
         eventdir = -1;      %  Detect only events with dydt<0
 	end
