@@ -44,13 +44,16 @@ x = r*sin(zout(:,1)) .* cos(zout(:,3) );
 y = r*sin(zout(:,1)) .* sin(zout(:,3) );
 z = r*cos(zout(:,1));
 
-
-plot3(x,y,-z)
-grid on;
-xlabel('x position (m)', 'FontSize', 16)
-ylabel('y position (m)', 'FontSize', 16)
-zlabel('z position (m)', 'FontSize', 16)
-title('2D pendulum with Aerodynamic Drag, 30 degrees start', 'FontSize', 20)
+plot(zout(:,2))
+xlabel('time (s)', 'FontSize', 16)
+ylabel('Force Tension (N)', 'FontSize', 16)
+title('Radial Tension Force for a 2D pendulum with Aerodynamic Drag, 30 degrees start', 'FontSize', 20)
+% plot3(x,y,-z)
+% grid on;
+% xlabel('x position (m)', 'FontSize', 16)
+% ylabel('y position (m)', 'FontSize', 16)
+% zlabel('z position (m)', 'FontSize', 16)
+% title('2D pendulum with Aerodynamic Drag, 30 degrees start', 'FontSize', 20)
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -59,7 +62,7 @@ title('2D pendulum with Aerodynamic Drag, 30 degrees start', 'FontSize', 20)
 function states = sphpend_fun(T, ZZ)
 % solve simultaneously for theta and phi ( and dtheta/dt and dphi/dt)
 z1 = ZZ(2); 
-z2 = (ZZ(4)^2*sin(ZZ(1))*cos(ZZ(1)) - g/r* sin(ZZ(1))-c*(ZZ(2))^2);
+z2 = m*(ZZ(4)^2*sin(ZZ(1))*cos(ZZ(1)) - g/r* sin(ZZ(1))-c*(ZZ(2))^2);
 z3 = 0; %ZZ(4);
 z4 = 0; %-(2*ZZ(2)*ZZ(4)*cos(ZZ(1))) / sin(ZZ(1));
 %
