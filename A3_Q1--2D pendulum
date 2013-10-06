@@ -1,0 +1,71 @@
+% spherical_pendulum.m 
+%
+% Simulation of a spherical pendulum 
+% 
+% The particle is given an initial velocity in circumferential direction
+%
+% ENGR 2340 Dynamics Fall 2013
+% last modified 9/23/13,  CLee
+%
+function spherical_pendulum
+clear all
+close all
+
+% Define system parameters; put in metric units
+%
+g = 9.81;              % gravitational acceleration in m/s^2
+r = 200.0;               % length of pendulum arm in m
+m = 3.0;               % mass = 3.0 kg, assume rod has neglible mass
+ro=1; %density air
+Cd=.47; %drag coefficient, sphere
+A=1; %area of the bob
+c=.5*ro*Cd*A; %coefficient for 
+phi_0 = 30 * pi/180;              % initial phi value = 30 degrees, convert to rad
+theta_dot_0 = 1/ (sin(phi_0)*r)   % velocity component in theta direction = 0.5 m/s
+%
+% Define state variables: 
+%  z1 = phi, z2 = d(phi)/dt, z3 = theta, z4 = d(theta)/dt
+
+% Specify initial conditions. 
+z1_0 = phi_0;  
+z2_0 = 0; 
+z3_0 = 0;    %
+z4_0 = theta_dot_0;
+
+Z_0 = [z1_0, z2_0, z3_0, z4_0]
+% Define simulation parameters
+t_span = [0:0.01:20];  % max time span for simulation 
+
+[t, zout] = ode45(@sphpend_fun, t_span, Z_0);
+
+
+% x-y position in cartesian coordinates
+x = r*sin(zout(:,1)) .* cos(zout(:,3) );
+y = r*sin(zout(:,1)) .* sin(zout(:,3) );
+z = r*cos(zout(:,1));
+
+
+plot3(x,y,-z)
+grid on;
+xlabel('x position (m)', 'FontSize', 16)
+ylabel('y position (m)', 'FontSize', 16)
+zlabel('z position (m)', 'FontSize', 16)
+title('2D pendulum with Aerodynamic Drag, 30 degrees start', 'FontSize', 20)
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% function definition in first order form
+function states = sphpend_fun(T, ZZ)
+% solve simultaneously for theta and phi ( and dtheta/dt and dphi/dt)
+z1 = ZZ(2); 
+z2 = (ZZ(4)^2*sin(ZZ(1))*cos(ZZ(1)) - g/r* sin(ZZ(1))-c*(ZZ(2))^2);
+z3 = 0; %ZZ(4);
+z4 = 0; %-(2*ZZ(2)*ZZ(4)*cos(ZZ(1))) / sin(ZZ(1));
+%
+states = [z1;z2;z3;z4];
+%
+end
+
+
+end
