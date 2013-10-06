@@ -47,10 +47,19 @@ z = r*cos(zout(:,1));
 vx = r*sin(zout(:,2)) .* cos(zout(:,4) );
 vy = r*sin(zout(:,2)) .* sin(zout(:,4) );
 
-plot(vx)
-xlabel('time (s)', 'FontSize', 16)
-ylabel('Velocity (m/s)', 'FontSize', 16)
-title('Velocity in X for a 2D pendulum with Aerodynamic Drag, 30 degrees start', 'FontSize', 20)
+vt=(vx.^2+vy.^2).^.5
+KE=(.5*m).*vt.^2;
+height=abs(200-z)
+GPE=m*g*height;
+
+hold all
+plot(GPE+KE)
+plot(KE)
+plot(GPE)
+xlabel('Time (s)', 'FontSize', 16)
+ylabel('Energy (J)', 'FontSize', 16)
+title('Total Energy of a 2D pendulum, 30 degrees start', 'FontSize', 20)
+legend('Gravitational and Kinetic Energy','Kinetic Energy','Gravitational Energy')
 % plot3(x,y,-z)
 % grid on;
 % xlabel('x position (m)', 'FontSize', 16)
@@ -65,7 +74,7 @@ title('Velocity in X for a 2D pendulum with Aerodynamic Drag, 30 degrees start',
 function states = sphpend_fun(T, ZZ)
 % solve simultaneously for theta and phi ( and dtheta/dt and dphi/dt)
 z1 = ZZ(2); 
-z2 = (ZZ(4)^2*sin(ZZ(1))*cos(ZZ(1)) - g/r* sin(ZZ(1))-c*(ZZ(2))^2);
+z2 = (ZZ(4)^2*sin(ZZ(1))*cos(ZZ(1)) - g/r* sin(ZZ(1)));%-c*(ZZ(2))^2);
 z3 = 0; %ZZ(4);
 z4 = 0; %-(2*ZZ(2)*ZZ(4)*cos(ZZ(1))) / sin(ZZ(1));
 %
