@@ -44,10 +44,13 @@ x = r*sin(zout(:,1)) .* cos(zout(:,3) );
 y = r*sin(zout(:,1)) .* sin(zout(:,3) );
 z = r*cos(zout(:,1));
 
-plot(zout(:,2))
+fx = r*sin(zout(:,2)) .* cos(zout(:,4) );
+fy = r*sin(zout(:,2)) .* sin(zout(:,4) );
+
+plot(fx)
 xlabel('time (s)', 'FontSize', 16)
 ylabel('Force Tension (N)', 'FontSize', 16)
-title('Radial Tension Force for a 2D pendulum with Aerodynamic Drag, 30 degrees start', 'FontSize', 20)
+title('Force in X for a 2D pendulum with Aerodynamic Drag, 30 degrees start', 'FontSize', 20)
 % plot3(x,y,-z)
 % grid on;
 % xlabel('x position (m)', 'FontSize', 16)
