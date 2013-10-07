@@ -5,13 +5,13 @@ function A3_Q3_double_pendulum
     % Define system parameters; put in metric units
     %
     g = 9.81;              % gravitational acceleration in m/s^2
-    r = 200.0;               % length of pendulum arm in m
     m1 = 3.0;
     m2=4; %kg
     l1=5;
     l2=3;
     phi_0 = 30 * pi/180;              % initial phi value = 30 degrees, convert to rad
-    theta_dot_0 = 1/ (sin(phi_0)*r);   % velocity component in theta direction = 0.5 m/s
+    theta_0 = 45 * pi/180;
+    theta_dot_0 = 1/ (sin(phi_0)*l2);   % velocity component in theta direction = 0.5 m/s
     %
     % Define state variables: 
     %  z1 = phi, z2 = d(phi)/dt, z3 = theta, z4 = d(theta)/dt
@@ -19,12 +19,12 @@ function A3_Q3_double_pendulum
     % Specify initial conditions. 
     z1_0 = phi_0;  
     z2_0 = 0; 
-    z3_0 = 0;    %
+    z3_0 = theta_0;    %
     z4_0 = theta_dot_0;
 
     Z_0 = [z1_0, z2_0, z3_0, z4_0];
     % Define simulation parameters
-    t_span = [0:0.01:20];  % max time span for simulation 
+    t_span = [0:0.01:7];  % max time span for simulation 
 
     [t, zout] = ode45(@sphpend_fun, t_span, Z_0);
 
@@ -48,7 +48,7 @@ function A3_Q3_double_pendulum
     legend('Upper Pendulum', 'Lower Pendulum')
     xlabel('x position (m)', 'FontSize', 16)
     ylabel('y position (m)', 'FontSize', 16)
-    title('Double Pendulum, 30 degrees start', 'FontSize', 20)
+    title('Double Pendulum, 30, 0 degrees start', 'FontSize', 20)
 
     function states = sphpend_fun(T, ZZ)
         % unpack vectors:
