@@ -30,9 +30,9 @@ function A3_Q3_double_pendulum
 
 
     % x-y position in cartesian coordinates
-    x = r*sin(zout(:,1)) .* cos(zout(:,3) );
-    y = r*sin(zout(:,1)) .* sin(zout(:,3) );
-    z = r*cos(zout(:,1));
+    t11=zout(:,1);t22=zout(:,3);
+    x1 =l1.*sin(t11); x2=x1-(l2.*sin(t22));
+    y1=l1.*cos(t11); y2=y1+(l2*cos(t22));
 
 %     hold all
 %     plot(GPE+KE)
@@ -42,12 +42,13 @@ function A3_Q3_double_pendulum
 %     ylabel('Energy (J)', 'FontSize', 16)
 %     title('Total Energy of a 2D pendulum, 30 degrees start', 'FontSize', 20)
 %     legend('Gravitational and Kinetic Energy','Kinetic Energy','Gravitational Energy')
-    plot(x,-z)
-    grid on;
+    hold all
+    plot(x1,-y1)
+    plot(x2,-y2)
+    legend('Upper Pendulum', 'Lower Pendulum')
     xlabel('x position (m)', 'FontSize', 16)
     ylabel('y position (m)', 'FontSize', 16)
-    zlabel('z position (m)', 'FontSize', 16)
-    title('2D pendulum with Aerodynamic Drag, 30 degrees start', 'FontSize', 20)
+    title('Double Pendulum, 30 degrees start', 'FontSize', 20)
 
     function states = sphpend_fun(T, ZZ)
         % unpack vectors:
