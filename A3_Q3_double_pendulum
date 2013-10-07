@@ -6,9 +6,12 @@ function A3_Q3_double_pendulum
     %
     g = 9.81;              % gravitational acceleration in m/s^2
     r = 200.0;               % length of pendulum arm in m
-    m = 3.0;               % mass = 3.0 kg, assume rod has neglible mass
+    m1 = 3.0;
+    m2=4; %kg
+    l1=5;
+    l2=3;
     phi_0 = 30 * pi/180;              % initial phi value = 30 degrees, convert to rad
-    theta_dot_0 = 1/ (sin(phi_0)*r)   % velocity component in theta direction = 0.5 m/s
+    theta_dot_0 = 1/ (sin(phi_0)*r);   % velocity component in theta direction = 0.5 m/s
     %
     % Define state variables: 
     %  z1 = phi, z2 = d(phi)/dt, z3 = theta, z4 = d(theta)/dt
@@ -19,7 +22,7 @@ function A3_Q3_double_pendulum
     z3_0 = 0;    %
     z4_0 = theta_dot_0;
 
-    Z_0 = [z1_0, z2_0, z3_0, z4_0]
+    Z_0 = [z1_0, z2_0, z3_0, z4_0];
     % Define simulation parameters
     t_span = [0:0.01:20];  % max time span for simulation 
 
@@ -47,11 +50,23 @@ function A3_Q3_double_pendulum
     title('2D pendulum with Aerodynamic Drag, 30 degrees start', 'FontSize', 20)
 
     function states = sphpend_fun(T, ZZ)
+        % unpack vectors:
+        t1=ZZ(1); t2=ZZ(3);
+        t1d=ZZ(2); t2d=ZZ(4);
+        
+        n1=-g*(2*m1+m2)*sin(t1);
+        n2=m2*g*sin(t1-2*t2);
+        n3=-2*sin(t1-t2)*m2*(t2d^2*l2+t1d^2*l1*cos(t1-t2));
+        n4=l1*(2*m1+m2-m2*cos(2*t1-2*t2));
+        
+        n5=2*sin(t1-t2)*(t1d^2*l1*(m1+m2)+g*(m1+m2)*cos(t1)+t2d^2*l2*m2*cos(t1-t2));
+        n8=l2*(2*m1+m2-m2*cos(2*t1-2*t2));
+        
         % solve simultaneously for theta and phi ( and dtheta/dt and dphi/dt)
         z1 = ZZ(2); 
-        z2 = (ZZ(4)^2*sin(ZZ(1))*cos(ZZ(1)) - g/r* sin(ZZ(1)));%-c*(ZZ(2))^2);
-        z3 = 0; %ZZ(4);
-        z4 = 0; %-(2*ZZ(2)*ZZ(4)*cos(ZZ(1))) / sin(ZZ(1));
+        z2 = (n1+n2+n3)/n4;
+        z3 = 0;
+        z4 = (n5)/n8;
         %
         states = [z1;z2;z3;z4];
         %
