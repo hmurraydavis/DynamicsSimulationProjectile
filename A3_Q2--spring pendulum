@@ -13,17 +13,17 @@ close all
 
 % Define system parameters; put in metric units
 %
-g = 9.81;              % gravitational acceleration in m/s^2
-r = 200.0;               % length of pendulum arm in m
+g = -9.81;              % gravitational acceleration in m/s^2
+r0 = 800.0;               % length of pendulum arm in m
 m = 3.0;               % mass = 3.0 kg, assume rod has neglible mass
 ro=1; %density air
 Cd=.47; %drag coefficient, sphere
 A=1; %area of the bob
 c=.5*ro*Cd*A; %coefficient for drag
-k=1000; %spring constant
-lo=4; 
+k=9800; %spring constant
+lo=400; 
 phi_0 = 30 * pi/180;              % initial phi value = 30 degrees, convert to rad
-theta_dot_0 = 1/ (sin(phi_0)*r);   % velocity component in theta direction = 0.5 m/s
+theta_dot_0 = 1/ (sin(phi_0)*r0);   % velocity component in theta direction = 0.5 m/s
 %
 % Define state variables: 
 %  z1 = phi, z2 = d(phi)/dt, z3 = theta, z4 = d(theta)/dt
@@ -33,14 +33,14 @@ z1_0 = phi_0;
 z2_0 = 0; 
 z3_0 = 0;    %
 z4_0 = theta_dot_0;
-z5_0 =5; %initial spring length
+z5_0 =r0; %initial spring length
 z6_0=0; %initial spring acceleration
 
 Z_0 = [z1_0, z2_0, z3_0, z4_0, z5_0, z6_0];
 % Define simulation parameters
-t_span = [0:0.001:20];  % max time span for simulation 
+t_span = [0:0.001:5];  % max time span for simulation 
 
-[t, zout] = ode45(@sphpend_fun, t_span, Z_0);
+[time, zout] = ode45(@sphpend_fun, t_span, Z_0);
 
 
 % x-y position in cartesian coordinates
@@ -64,7 +64,7 @@ GPE=m*g*height;
 % ylabel('Energy (J)', 'FontSize', 16)
 % title('Total Energy of a 2D pendulum, 30 degrees start', 'FontSize', 20)
 % legend('Gravitational and Kinetic Energy','Kinetic Energy','Gravitational Energy')
-
+% 
 plot3(x,y,-z)
 grid on;
 xlabel('x position (m)', 'FontSize', 16)
@@ -72,21 +72,27 @@ ylabel('y position (m)', 'FontSize', 16)
 zlabel('z position (m)', 'FontSize', 16)
 title('2D pendulum with Aerodynamic Drag, 30 degrees start', 'FontSize', 20)
 
+zout
+
+% plot(zout(:,4))
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % function definition in first order form
 function states = sphpend_fun(T, ZZ)
     % solve simultaneously for theta and phi ( and dtheta/dt and dphi/dt)
-    %
-    z1 = ZZ(2); %phi dot
-    z2 = (ZZ(4)^2*sin(ZZ(1))*cos(ZZ(1)) - g/r* sin(ZZ(1)));%phi double dot
+    rd=ZZ(6); pd=ZZ(2); td=ZZ(4);
+    r= ZZ(5); p=ZZ(1); t=ZZ(3);
+    
+    z1 = pd; %phi dot
+    z2 = (r*td^2*sin(p)*cos(p))-(g*sin(p)/r)-(2*pd*rd);%phi double dot
 
-    z3 = ZZ(4); %theta dot
-    z4 = -(2*ZZ(2)*ZZ(4)*cos(ZZ(1))) / sin(ZZ(1)); %theta double dot
+    z3 = td; %theta dot
+    z4 = ( (2*rd*td*sin(p))+(2*r*pd*td*cos(t)) )/(-1*r*sin(p)); %theta double dot
 
     z5= ZZ(6);%r dot
-    z6= -k*(lo-ZZ(5)); %r double dot
+    z6= -k*(lo-r)+(9.8/cos(p)); %r double dot
     %
     states = [z1;z2;z3;z4;z5;z6];
     %
