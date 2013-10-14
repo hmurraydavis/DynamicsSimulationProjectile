@@ -1,8 +1,20 @@
 syms theta phi psi % define variables as 'symbolic'
  
+% theta =0;
+% phi=0;
+% psi=0;
+
 % define matrices 
 r1_321 = [ cos(psi)  sin(psi)  0; -sin(psi) cos(psi) 0; 0  0  1];
 r2_321 = [ cos(theta) 0  -sin(theta);  0  1  0; sin(theta) 0 cos(theta)  ];
 r3_321 = [ 1  0  0; 0  cos(phi)  sin(phi);  0  -sin(phi)  cos(phi)];
 %
-r_321 = r3_321*r2_321*r1_321  % use '*' for matrix mult. use '.*' to mult indvid. elements of matrix
+r_321 = r3_321*r2_321*r1_321;  % use '*' for matrix mult. use '.*' to mult indvid. elements of matrix
+
+% v=[0;.02;.01];
+% D=r_321 * v;
+t=2;
+radvec=[-.2*t^2;.5*t^2;30*t];
+S=r_321 *radvec;
+
+pphi=atan(r_321(2,3)./r_321(3,3))
