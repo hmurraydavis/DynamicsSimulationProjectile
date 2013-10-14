@@ -1,0 +1,32 @@
+function res=E1_Q5_c()
+    omega=1; %rad/sec
+    r=20; %cm
+    m=10; %g
+
+    Z=[0,0,1,0,3,0,2,0];
+    t_span=[0:0.004:100];
+    [t,zz]=ode45(@functions_integrate, t_span,Z);
+
+    function states=functions_integrate(t,zz)
+        theta=zz(1);
+        dtheta=0.1; %rad/s
+        x=zz(3);
+        dx=r*cos(theta)*dtheta;
+        y=zz(5);
+        dy=r*sin(theta)*dtheta;
+        z=zz(7);
+        dz=omega;
+        theta=atan(x/y);
+        dtheta=atan(dx/dy);
+
+        states=[theta;dtheta;x;dx;y;dy;z;dz];
+    end
+
+    hold all;
+    plot(t,zz(:,2));
+    plot(t,zz(:,1));
+    legend('dtheta/dt','theta')
+    xlabel('time (s)', 'FontSize', 16)
+    ylabel('angle (rad)', 'FontSize', 16)
+    title('Changing Angle with Time', 'FontSize', 20)
+end
