@@ -1,0 +1,52 @@
+function shell()
+    clear all; %prep environment
+
+    %Initial conditions:
+    g=9.8; %m/s
+    m=.6; %mass, kg
+    vi=17; %cm/s
+    theta=60; %degrees, launch angle
+    
+    %State variables: xpos, xvel, ypos, yvel, initial
+    z1_o=0; z2_o=vi*cosd(theta); z3_o=0; z4_o=vi*sind(theta);
+    Z_o=[z1_o, z2_o, z3_o, z4_o];
+    
+    %Integrate!:
+    t_span = [0:0.01:100];
+    options = odeset('Events', @event_stop);
+    
+    [t, zout] = ode45(@equations_d1, t_span, Z_o, options);
+    
+    %make pretty graphs:
+    plot(t,zout);
+    legend('xpos','xvel','ypos','yvel');
+    xposend=zout
+    
+    disp(t(length(t))); %prints the time at which it hits
+    %%
+    function states=equations_d1(T,Z) %function of first order eqs, integrated by ode45
+        %drag paramaters: 
+        ro=1; %density of fluid
+        cd=1.2; %drag coef of object
+        a=.20; %m, object's area
+        k=ro*cd*a/2; %all paramaters made into constant!
+        
+        %Integrated functions:
+        z1=Z(2); %vel x
+        z2=0-((z1^2)*k/m); %acc x
+        z3=Z(4); %vel y
+        z4=-g-((z3^2)*k/m); %acc y
+        
+        states=[z1;z2;z3;z4];
+    end
+    
+    %%
+    function [eventvalue,stopthecalc,eventdir] = event_stop(T,X)
+     
+        % stop when yl = 0 (lower mass hits the ground)
+        eventvalue = X(3)-6.1+4.7;  %  ‘Events’ are detected when eventvalue=0
+        stopthecalc = 1;    %  stop if event occurs
+        eventdir = -1;      %  Detect only events with dydt<0
+    end
+    %%
+end 
