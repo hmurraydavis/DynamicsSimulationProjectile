@@ -18,6 +18,7 @@ function res=E1_Q5_c()
         dz=omega;
         theta=atan(x/y);
         dtheta=atan(dx/dy);
+%         dtheta=(asin(dx/r)^2+acos(dy/r)^2)^.5;
 
         states=[theta;dtheta;x;dx;y;dy;z;dz];
     end
@@ -30,4 +31,3 @@ function res=E1_Q5_c()
     ylabel('angle (rad)', 'FontSize', 16)
     title('Changing Angle with Time', 'FontSize', 20)
 end
- 
