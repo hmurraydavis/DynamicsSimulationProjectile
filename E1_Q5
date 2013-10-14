@@ -30,3 +30,4 @@ function res=E1_Q5_c()
     ylabel('angle (rad)', 'FontSize', 16)
     title('Changing Angle with Time', 'FontSize', 20)
 end
+ 
