@@ -10,7 +10,7 @@ function res=E1_Q3_b()
     % ptheta=-1*asin(S(1,3))
     % ppsi=atan(S(1,2)/S(1,1))
     t_span=[0:0.0004:.01];
-    Z=[0,0,0,.02,0,.01]
+    Z=[0,0,0,.02,0,.01];
     [t,zp]=ode45(@eqs_pt1, t_span,Z);
     
 
@@ -27,14 +27,15 @@ function res=E1_Q3_b()
         %
         r_321 = r3_321*r2_321*r1_321;
         
-        v=[0;.02*t;.01*t];
+%         v=[0;.02*t;.01*t];
+        v=[Z(2);Z(4);Z(6)];
         D=r_321 * v;
         
         ppsi=atan(D(2)/D(1));
         ptheta=atan(D(3)/D(1));
         pphi=atan(D(3)/D(2));
 
-        state = [ppsi;ptheta;pphi];
+        state = [psi;ppsi;theta;ptheta;phi;pphi];
     end
 end
 
