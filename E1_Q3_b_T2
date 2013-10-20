@@ -1,0 +1,26 @@
+syms psi theta phi t     
+% define matrices 
+        r1_321 = [ cos(psi)  sin(psi)  0; -sin(psi) cos(psi) 0; 0  0  1];
+        r2_321 = [ cos(theta) 0  -sin(theta);  0  1  0; sin(theta) 0 cos(theta)  ];
+        r3_321 = [ 1  0  0; 0  cos(phi)  sin(phi);  0  -sin(phi)  cos(phi)];
+        %
+        r_321 = r3_321*r2_321*r1_321;
+        
+         
+R=[-.2*t^2;.5*t^2;30*t];
+w=[0;.02;.01];
+w1=[0,0,0;0,.02,0;0,0,.01];
+
+%% get x eq:
+mtx=inv(r1_321);
+x=w1*mtx;
+x=x(2,1);
+
+%% get y eq:
+mtx=inv(r2_321);
+y=w1*mtx
+y=y(3,1);
+
+%% get z eq:
+mtx=inv(r3_321);
+z=w1*mtx; %%WRONG!!!
