@@ -1,26 +1,13 @@
 function res=E1_Q3_b()
-  % use '*' for matrix mult. use '.*' to mult indvid. elements of matrix
-
-   
-    % t=2;
-    % radvec=[-.2*t^2;.5*t^2;30*t];
-    % S=r_321 *radvec;
-
-    % pphi=atan(S(2)/S(3))
-    % ptheta=-1*asin(S(1,3))
-    % ppsi=atan(S(1,2)/S(1,1))
-    
-    t_span=[0:0.004:5];
+     t_span=[0:0.004:5];
     
     Z=[0,0,0,.02,0,.01];
     [t,zp]=ode45(@eqs_pt1, t_span,Z);
     
-
     function state=eqs_pt1(T,Z)
         psi=Z(1);
         theta=Z(3);
         phi=Z(5);
-        
         
             % define matrices 
         r1_321 = [ cos(psi)  sin(psi)  0; -sin(psi) cos(psi) 0; 0  0  1];
@@ -43,10 +30,10 @@ function res=E1_Q3_b()
     end
     hold all
     plot(t,zp(:,1));
-%     plot(t,zp(:,3));
-%     plot(t,zp(:,5));
-    plot(t,zp(:,2));
-%     plot(t,zp(:,4));
-%     plot(t,zp(:,6));
+    plot(t,zp(:,3));
+    plot(t,zp(:,5));
+%     plot(t,zp(:,2));
+% %     plot(t,zp(:,4));
+% %     plot(t,zp(:,6));
 end
 
