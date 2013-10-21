@@ -1,0 +1,25 @@
+function res=E1_Q4()
+r=25; %radius ferriswheel, m
+omega=2; %m/s
+
+%% prep ODE call:
+Z=[0,1];
+t_span=[0:0.004:10];
+[t,zz]=ode45(@functions_integrate, t_span,Z);
+%%
+    function states=functions_integrate(t,zz)
+        theta=zz(1);
+        dtheta=5*6*t;
+        
+        states=[theta;dtheta];
+    end
+    %%
+    function res=theta_fun(t)
+        theta=(t^2)-30;
+        res=theta;
+    end
+%% Find zeros:
+fun=@theta_fun;
+x0=25;
+theta_ans=fzero(fun,x0)
+end
