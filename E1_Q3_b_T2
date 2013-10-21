@@ -1,27 +1,50 @@
-syms psi theta phi t     
-% define matrices 
-        r1_321 = [ cos(psi)  sin(psi)  0; -sin(psi) cos(psi) 0; 0  0  1];
-        r2_321 = [ cos(theta) 0  -sin(theta);  0  1  0; sin(theta) 0 cos(theta)  ];
-        r3_321 = [ 1  0  0; 0  cos(phi)  sin(phi);  0  -sin(phi)  cos(phi)];
-        %
+function res=E1_Q3_b()
+     t_span=[0:0.004:100];
+    
+    Z=[1,0,1,.02,1,.01];
+    [tt,zp]=ode45(@eqs_pt1, t_span,Z);
+    
+      function state=eqs_pt1(T,Z)
+       t=T;
+       psi=Z(1);
+       theta=Z(3);
+       phi=Z(5);
+
+            % define matrices 
+            r1_321 = [ cos(psi),  sin(psi),  0; -sin(psi) cos(psi) 0; 0  0  1];
+            r2_321 = [ cos(theta), 0,  -sin(theta);  0,  1,  0; sin(theta), 0, cos(theta) ];
+            r3_321 = [ 1,  0,  0; 0,  cos(phi),  sin(phi);  0,  -sin(phi),  cos(phi)];
+            %
         r_321 = r3_321*r2_321*r1_321;
-        
-         
-R=[-.2*t^2;.5*t^2;30*t];
-w=[0;.02;.01];
-w1=[0,0,0;0,.02,0;0,0,.01];
 
-%% get x eq:
-mtx=inv(r1_321);
-x=w1*mtx;
-x=x(1,1);
+        R=[-.2*t^2;.5*t^2;30*t];
+        w=[0;.02;.01];
+        w1=[0,0,0;0,.02,0;0,0,.01];
 
-%% get y eq:
-mtx=inv(r2_321);
-y=w1*mtx;
-y=y(2,2);
+        %% get x eq:
+        mtx=inv(r1_321);
+        x=w1*mtx;
+        xx=x(1,1);
 
-%% get z eq:
-mtx=inv(r3_321);
-z=w1*mtx;
-z=z(3,3);
+        %% get y eq:
+        mtx=inv(r2_321);
+        y=w1*mtx;
+        yy=y(2,2);
+
+        %% get z eq:
+        mtx=inv(r3_321);
+        z=w1*mtx;
+        zz=z(3,3);
+
+            state = [psi;xx;theta;yy;phi;zz];
+      end
+%     zp(:,5)
+    hold all
+    plot(tt,zp(:,1),'r');
+    plot(tt,zp(:,3),'c');
+    plot(tt,zp(:,5),'m');
+%     plot(t,zp(:,2));
+% %     plot(t,zp(:,4));
+% %     plot(t,zp(:,6));
+end
+
