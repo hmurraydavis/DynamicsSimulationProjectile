@@ -36,9 +36,18 @@ function res=E1_Q3_b()
         z=w1*mtx;
         zz=z(3,3);
 
-            state = [psi;xx;theta;yy;phi;zz];
-      end
+        state = [psi;xx;theta;yy;phi;zz];
+      end %%Output is euler angles themselves
 %     zp(:,5)
+
+%% compute first derives of angels
+    dpsi=diff(zp(:,1));
+    dtheta=diff(zp(:,2));
+    dphi=diff(zp(:,3));
+    
+    %% compute second derives of angles:
+    
+    
     hold all
     plot(tt,zp(:,1),'r');
     plot(tt,zp(:,3),'c');
