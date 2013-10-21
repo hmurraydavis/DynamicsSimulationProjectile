@@ -13,14 +13,16 @@ w1=[0,0,0;0,.02,0;0,0,.01];
 
 %% get x eq:
 mtx=inv(r1_321);
-x=w1*mtx;
-x=x(2,1);
+w1=[0,0,0;.02,0,0;.01,0,0];
+x=w1*mtx
+x=x(1,1);
 
 %% get y eq:
 mtx=inv(r2_321);
-y=w1*mtx
+y=w1*mtx;
 y=y(3,1);
 
 %% get z eq:
 mtx=inv(r3_321);
-z=w1*mtx; %%WRONG!!!
+z=w1*mtx; 
+%%WRONG!!!
