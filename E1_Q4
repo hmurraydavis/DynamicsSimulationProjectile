@@ -21,5 +21,6 @@ t_span=[0:0.004:10];
 %% Find zeros:
 fun=@theta_fun;
 x0=25;
-theta_ans=fzero(fun,x0)
+theta_ans=fzero(fun,x0);
+res=theta_ans;
 end
