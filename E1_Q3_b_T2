@@ -1,5 +1,5 @@
 function res=E1_Q3_b()
-     t_span=[0:0.004:100];
+     t_span=[0:0.04:100];
     
     Z=[1,0,1,.02,1,.01];
     [tt,zp]=ode45(@eqs_pt1, t_span,Z);
@@ -23,35 +23,37 @@ function res=E1_Q3_b()
 
         %% get x eq:
         mtx=inv(r1_321);
-        x=w1*mtx;
+        x=mtx*w; %%%%Switch order!!!!!!!
         xx=x(1,1);
 
         %% get y eq:
         mtx=inv(r2_321);
-        y=w1*mtx;
-        yy=y(2,2);
+        y=mtx*w;
+        yy=y(2,1);
 
         %% get z eq:
         mtx=inv(r3_321);
-        z=w1*mtx;
-        zz=z(3,3);
+        z=mtx*w;
+        zz=z(3,1);
 
         state = [psi;xx;theta;yy;phi;zz];
       end %%Output is euler angles themselves
-%     zp(:,5)
-
+  
 %% compute first derives of angels
-    dpsi=diff(zp(:,1));
-    dtheta=diff(zp(:,2));
-    dphi=diff(zp(:,3));
+%     dpsi=diff(zp(:,1));
+%     dtheta=diff(zp(:,2));
+%     dphi=diff(zp(:,3));
     
     %% compute second derives of angles:
+%     ddpsi=diff(dpsi);
+%     ddtheta=diff(dtheta);
+%     ddphi=diff(dphi);
     
-    
+    %% All the pretty plots:
     hold all
-    plot(tt,zp(:,1),'r');
-    plot(tt,zp(:,3),'c');
-    plot(tt,zp(:,5),'m');
+    plot(tt,zp(:,2),'r');
+    plot(tt,zp(:,4),'c');
+    plot(tt,zp(:,6),'m');
 %     plot(t,zp(:,2));
 % %     plot(t,zp(:,4));
 % %     plot(t,zp(:,6));
