@@ -14,10 +14,10 @@ t_span=[0:0.004:10];
         states=[theta;dtheta];
     end
     %%
-    function vz=theta_fun(theta)
+    function f=theta_fun(theta)
         g=9.8;
-        vz=(r*sin(theta)+r-.5*g*2*cos(theta)/omega)*(omega/2/cos(theta));
-        
+        vi=15;
+        f=(r*sin(theta)+r-.5*g*2*cos(theta)/omega)*(omega/2/cos(theta))-vi;
     end
 %% Find zeros:
 fun=@theta_fun;
