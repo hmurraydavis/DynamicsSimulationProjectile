@@ -1,6 +1,6 @@
 function res=E1_Q4()
 r=25; %radius ferriswheel, m
-omega=2; %m/s
+omega=1; %rad/s
 
 %% prep ODE call:
 Z=[0,1];
@@ -16,12 +16,13 @@ t_span=[0:0.004:10];
     %%
     function f=theta_fun(theta)
         g=9.8;
-        vi=15;
-        f=(r*sin(theta)+r-.5*g*2*cos(theta)/omega)*(omega/2/cos(theta))-vi;
+        vi=100;
+        f=(r*sin(theta)+r-.5*g*2*cos(theta)^2/omega)*(omega/2/cos(theta))-vi;
     end
 %% Find zeros:
 fun=@theta_fun;
-x0=25;
+x0=1;
 theta_ans=fzero(fun,x0);
 res=theta_ans;
+t=2*cos(theta_ans)/omega
 end
