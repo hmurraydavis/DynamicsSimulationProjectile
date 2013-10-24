@@ -1,14 +1,14 @@
 function res=E1_Q3_b()
      t_span=[0:0.04:100];
     
-    Z=[1,0,1,.02,1,.01];
+    Z=[1,5,6];
     [tt,zp]=ode45(@eqs_pt1, t_span,Z);
     
       function state=eqs_pt1(T,Z)
        t=T;
        psi=Z(1);
-       theta=Z(3);
-       phi=Z(5);
+       theta=Z(2);
+       phi=Z(3);
 
             % define matrices 
             r1_321 = [ cos(psi),  sin(psi),  0; -sin(psi) cos(psi) 0; 0  0  1];
@@ -22,76 +22,77 @@ function res=E1_Q3_b()
         w1=[0,0,0;0,.02,0;0,0,.01];
 
         %% get x eq:
-        mtx=inv(r1_321);
-        x=mtx*w; %%%%Switch order!!!!!!!
-        xx=x(1,1);
+        mtx1=inv(r1_321);
+        a1=mtx1*w;
+        x1=a1(1,1); y1=a1(2,1); z1=a1(3,1);
 
         %% get y eq:
-        mtx=inv(r2_321);
-        y=mtx*w;
-        yy=y(2,1);
+        mtx2=inv(r2_321);
+        a2=mtx2*w;
+        x2=a2(1,1);y2=a2(2,1);z2=a2(3,1);
 
         %% get z eq:
-        mtx=inv(r3_321);
-        z=mtx*w;
-        zz=z(3,1);
+        mtx3=inv(r3_321);
+        a3=mtx3*w;
+        x3=a3(1,1);  y3=a3(2,1);  z3=a3(3,1);
 
-        state = [psi;xx;theta;yy;phi;zz];
+        X=x1+x2+x3; Y=y1+y2+y3; Z=z1+z2+z3;
+        state = [X;Y;Z];
       end %%Output is euler angles themselves
   
-% compute first derives of angels
-    dpsi=diff(zp(:,1));
-    dtheta=diff(zp(:,2));
-    dphi=diff(zp(:,3));
-    
-    %% compute second derives of angles:
-    ddpsi=diff(dpsi);
-    ddtheta=diff(dtheta);
-    ddphi=diff(dphi);
-    
+% % compute first derives of angels
+%     dpsi=diff(zp(:,1));
+%     dtheta=diff(zp(:,2));
+%     dphi=diff(zp(:,3));
+%     
+%     %% compute second derives of angles:
+%     ddpsi=diff(dpsi);
+%     ddtheta=diff(dtheta);
+%     ddphi=diff(dphi);
+%     
     %% All the pretty plots:
-figure
-% hold on;
-subplot(3,1,1), plot(tt,zp(:,2),'r')
-title('Changing Psi Angles with Time')
-ylabel('Angle (rad)')
-xlabel('Time (s)')
-hold
-subplot(3,1,2), plot(tt,zp(:,4),'y')
-title('theta')
-ylabel('Vertical displacement (m)')
-xlabel('Time (s)')
-subplot(3,1,3), plot(tt,zp(:,6),'b')
-title('Phi')
-ylabel('Vertical displacement (m)')
-xlabel('Time (s)')
+    figure
+    % hold on;
+    subplot(3,1,1), plot(tt,zp(:,1),'r')
+    title('Changing Psi Angles with Time')
+    ylabel('Angle (rad)')
+    xlabel('Time (s)')
+    hold
+    subplot(3,1,2), plot(tt,zp(:,2),'y')
+    title('theta')
+    ylabel('Vertical displacement (m)')
+    xlabel('Time (s)')
+    subplot(3,1,3), plot(tt,zp(:,3),'b')
+    title('Phi')
+    ylabel('Vertical displacement (m)')
+    xlabel('Time (s)')
 
-figure
-subplot(3,1,1), plot(dpsi(:,1),'c')
-title('Derivative of Psi Angle with Time')
-ylabel('Rate of Change (rad/s)')
-xlabel('Time (s)')
-subplot(3,1,2), plot(dtheta(:,1),'g') 
-title('Derivative of Thet Angle with Time')
-ylabel('Rate of Change (rad/s)')
-xlabel('Time (s)')
-subplot(3,1,3), plot(dphi(:,1),'m') 
-title('Derivative of Psi Angle with Time')
-ylabel('Rate of Change (rad/s)')
-xlabel('Time (s)')
+    figure
+    subplot(3,1,1), plot(dpsi(:,1),'c')
+    title('Derivative of Psi Angle with Time')
+    ylabel('Rate of Change (rad/s)')
+    xlabel('Time (s)')
+    subplot(3,1,2), plot(dtheta(:,1),'g') 
+    title('Derivative of Thet Angle with Time')
+    ylabel('Rate of Change (rad/s)')
+    xlabel('Time (s)')
+    subplot(3,1,3), plot(dphi(:,1),'m') 
+    title('Derivative of Psi Angle with Time')
+    ylabel('Rate of Change (rad/s)')
+    xlabel('Time (s)')
 
-figure
-subplot(3,1,1), plot(ddpsi(:,1),'c')
-title('2nd Derivative of Psi Angle with Time')
-ylabel('Rate of Change per time (rad/s^2)')
-xlabel('Time (s)')
-subplot(3,1,2), plot(ddtheta(:,1),'g') 
-title('2nd Derivative of Psi Angle with Time')
-ylabel('Rate of Change per time (rad/s^2)')
-xlabel('Time (s)')
-subplot(3,1,3), plot(ddphi(:,1),'m') 
-title('2nd Derivative of Psi Angle with Time')
-ylabel('Rate of Change per time (rad/s^2)')
-xlabel('Time (s)')
+    figure
+    subplot(3,1,1), plot(ddpsi(:,1),'c')
+    title('2nd Derivative of Psi Angle with Time')
+    ylabel('Rate of Change per time (rad/s^2)')
+    xlabel('Time (s)')
+    subplot(3,1,2), plot(ddtheta(:,1),'g') 
+    title('2nd Derivative of Psi Angle with Time')
+    ylabel('Rate of Change per time (rad/s^2)')
+    xlabel('Time (s)')
+    subplot(3,1,3), plot(ddphi(:,1),'m') 
+    title('2nd Derivative of Psi Angle with Time')
+    ylabel('Rate of Change per time (rad/s^2)')
+    xlabel('Time (s)')
 end
 
