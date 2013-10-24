@@ -1,7 +1,7 @@
 function res=E1_Q3_b()
      t_span=[0:0.04:100];
     
-    Z=[0,0,0];
+    Z=[0,0,0,.01,0,.02];
     [tt,zp]=ode45(@eqs_pt1, t_span,Z);
     
       function state=eqs_pt1(T,Z)
@@ -36,20 +36,17 @@ function res=E1_Q3_b()
         a3=mtx3*w;
         x3=a3(1,1);  y3=a3(2,1);  z3=a3(3,1);
 
-        X=x1+x2+x3; Y=y1+y2+y3; Z=z1+z2+z3;
-        state = [X;Y;Z];
+        vX=x1+x2+x3; vY=y1+y2+y3; vZ=z1+z2+z3;   %combined velocities in components
+        X=Z(2);Y=Z(4);ZZ=Z(6); % combined vels, integrated to pos inside function
+        state = [X;vX;Y;vY;ZZ;vZ];
       end %%Output is euler angles themselves
   
 % % compute first derives of angels
-%     dpsi=diff(zp(:,1));
-%     dtheta=diff(zp(:,2));
-%     dphi=diff(zp(:,3));
+%     dpsi=diff(zp(:,2));
+%     dtheta=diff(zp(:,4));
+%     dphi=diff(zp(:,6));
 %     
-%     %% compute second derives of angles:
-%     ddpsi=diff(dpsi);
-%     ddtheta=diff(dtheta);
-%     ddphi=diff(dphi);
-%     
+    
     %% All the pretty plots:
     figure
     % hold on;
