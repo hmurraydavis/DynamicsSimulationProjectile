@@ -23,4 +23,4 @@ fun=@theta_fun;
 x0=25;
 theta_ans=fzero(fun,x0);
 res=theta_ans;
-end
+end 
