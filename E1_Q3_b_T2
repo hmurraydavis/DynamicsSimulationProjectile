@@ -1,7 +1,7 @@
 function res=E1_Q3_b()
      t_span=[0:0.04:100];
     
-    Z=[0,0,0,.01,0,.02];
+    Z=[0,0,0,.02,0,-.01];
     [tt,zp]=ode45(@eqs_pt1, t_span,Z);
     
       function state=eqs_pt1(T,Z)
@@ -18,37 +18,30 @@ function res=E1_Q3_b()
         r_321 = r3_321*r2_321*r1_321;
 
         R=[-.2*t^2;.5*t^2;30*t];
-        w=[0;.02;.01];
+        w=[0;.02;-.01];
         w1=[0,0,0;0,.02,0;0,0,.01];
-
+        
         %% get x eq:
-        mtx1=inv(r1_321);
+        mtx1=inv(r_321);
         a1=mtx1*w;
+%         a1=(r_321^(-1))*w
         x1=a1(1,1); y1=a1(2,1); z1=a1(3,1);
 
-        %% get y eq:
-        mtx2=inv(r2_321);
-        a2=mtx2*w;
-        x2=a2(1,1);y2=a2(2,1);z2=a2(3,1);
 
-        %% get z eq:
-        mtx3=inv(r3_321);
-        a3=mtx3*w;
-        x3=a3(1,1);  y3=a3(2,1);  z3=a3(3,1);
-
-        vX=x1+x2+x3; vY=y1+y2+y3; vZ=z1+z2+z3;   %combined velocities in components
         X=Z(2);Y=Z(4);ZZ=Z(6); % combined vels, integrated to pos inside function
-        state = [X;vX;Y;vY;ZZ;vZ];
+        state = [X;x1;Y;y1;ZZ;z1];
       end %%Output is euler angles themselves
   
-  zp(:,5)
-  
+
 % % compute first derives of angels
 %     dpsi=diff(zp(:,2));
 %     dtheta=diff(zp(:,4));
 %     dphi=diff(zp(:,6));
 %     
 %     
+zp(length(zp),1)%*180/pi
+zp(length(zp),3)
+zp(length(zp),5)
     %% All the pretty plots:
     figure
     % hold on;
@@ -69,8 +62,8 @@ function res=E1_Q3_b()
     figure
     plot(tt,zp(:,1),'r')
     hold
-    plot(tt,zp(:,2),'y')
-    plot(tt,zp(:,3),'b')
+    plot(tt,zp(:,3),'g')
+    plot(tt,zp(:,5),'b')
     legend('phi', 'theta','psi')
     ylabel('Angle (rad)')
     xlabel('Time (s)')
