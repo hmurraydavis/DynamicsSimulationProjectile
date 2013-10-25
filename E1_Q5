@@ -13,20 +13,31 @@ function res=E1_Q5_c()
         ddtheta1=0; ddtheta2=0; 
         theta1=zz(1); theta2=zz(3);
         
-        amc1= 0;%(-l2*dtheta2^2) - (l1*(dtheta1^2)*cos(theta2-theta1)); % + (l1*ddtheta1*sin(theta2-theta1));
-        amc2=(l2*ddtheta2) + (l1*dtheta1^2*sin(theta2-theta1)); % + (l1*ddtheta1*cos(theta2-theta1));
-        vmc1=0;%zz(1);
+        vmc1=0;
+        amc1= 0;
+        
         vmc2=zz(4);
+        amc2=(l1*(dtheta1^2)*sin(theta2-theta1)); %(l2*ddtheta2) + (0) + (l1*ddtheta1*cos(theta2-theta1));
+        
+        
 
         states=[vmc1;amc1;vmc2;amc2];
     end
-thet1=zz(:,1);thet1dot=zz(:,2);thet2=zz(:,3);thet2dot=zz(:,4);
-x=sin(thet1)+sin(thet2);
-y=cos(thet1)+cos(thet2);
+
+%% Seperate out variables:
+    thet1=zz(:,1);thet1dot=zz(:,2);thet2=zz(:,3);thet2dot=zz(:,4);
+    x=sin(thet1)+sin(thet2);
+    y=cos(thet1)+cos(thet2);
+    
+    %%Plot position
     figure
     hold
     plot(x,y)
+        xlabel('x, (m)', 'FontSize', 16)
+    ylabel('y, (m)', 'FontSize', 16)
+    title('Ball Position in Space', 'FontSize', 20)
     
+    %%Plot theta
     figure
     hold all;
     plot(t,thet2,'m');
@@ -34,6 +45,7 @@ y=cos(thet1)+cos(thet2);
     ylabel('angle (rad)', 'FontSize', 16)
     title('Theta with Time', 'FontSize', 20)
     
+    %Plot d theta/ dt
     figure
     plot(t,thet2dot,'c');
         xlabel('time (s)', 'FontSize', 16)
