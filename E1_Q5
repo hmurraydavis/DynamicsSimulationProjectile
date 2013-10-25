@@ -11,12 +11,12 @@ function res=E1_Q5_c()
     function states=functions_integrate(t,zz)
         dtheta1=omega; dtheta2=0;
         ddtheta1=0; ddtheta2=0; 
-        theta1=zz(1);theta2=zz(2);
+        theta1=zz(1); theta2=zz(3);
         
-        amc1= (-l2*dtheta2^2) - (l1*(dtheta1^2)*cos(theta2-theta1)) + (l1*ddtheta1*sin(theta2-theta1));
+        amc1= 0;%(-l2*dtheta2^2) - (l1*(dtheta1^2)*cos(theta2-theta1)); % + (l1*ddtheta1*sin(theta2-theta1));
         amc2=(l2*ddtheta2) + (l1*dtheta1^2*sin(theta2-theta1)); % + (l1*ddtheta1*cos(theta2-theta1));
-        vmc1=zz(1);
-        vmc2=zz(2);
+        vmc1=0;%zz(1);
+        vmc2=zz(4);
 
         states=[vmc1;amc1;vmc2;amc2];
     end
@@ -32,11 +32,11 @@ y=cos(thet1)+cos(thet2);
     plot(t,thet2,'m');
     xlabel('time (s)', 'FontSize', 16)
     ylabel('angle (rad)', 'FontSize', 16)
-    title('Changing Angle with Time', 'FontSize', 20)
+    title('Theta with Time', 'FontSize', 20)
     
     figure
     plot(t,thet2dot,'c');
         xlabel('time (s)', 'FontSize', 16)
     ylabel('d theta/d t (rad/s)', 'FontSize', 16)
-    title('Changing Angle Derivative with Time', 'FontSize', 20)
+    title('d theta/dt', 'FontSize', 20)
 end
