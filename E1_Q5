@@ -49,4 +49,4 @@ function res=E1_Q5_c()
         xlabel('time (s)', 'FontSize', 16)
     ylabel('d theta/d t (rad/s)', 'FontSize', 16)
     title('d theta/dt', 'FontSize', 20)
-end
+end 
