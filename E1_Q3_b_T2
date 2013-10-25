@@ -7,8 +7,8 @@ function res=E1_Q3_b()
       function state=eqs_pt1(T,Z)
        t=T;
        psi=Z(1);
-       theta=Z(2);
-       phi=Z(3);
+       theta=Z(3);
+       phi=Z(5);
 
             % define matrices 
             r1_321 = [ cos(psi),  sin(psi),  0; -sin(psi) cos(psi) 0; 0  0  1];
@@ -41,12 +41,14 @@ function res=E1_Q3_b()
         state = [X;vX;Y;vY;ZZ;vZ];
       end %%Output is euler angles themselves
   
+  zp(:,5)
+  
 % % compute first derives of angels
 %     dpsi=diff(zp(:,2));
 %     dtheta=diff(zp(:,4));
 %     dphi=diff(zp(:,6));
 %     
-    
+%     
     %% All the pretty plots:
     figure
     % hold on;
@@ -55,7 +57,7 @@ function res=E1_Q3_b()
     ylabel('Angle (rad)')
     xlabel('Time (s)')
     hold
-    subplot(3,1,2), plot(tt,zp(:,2),'y')
+    subplot(3,1,2), plot(tt,zp(:,2),'c')
     title('Theta')
     ylabel('Angle (rad)')
     xlabel('Time (s)')
