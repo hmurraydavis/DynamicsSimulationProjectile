@@ -2,32 +2,41 @@ function res=E1_Q5_c()
     omega=1; %rad/sec
     r=20; %cm
     m=10; %g
+    l1=r; l2=r/3;
 
-    Z=[0,0,1,0,3,0,2,0];
+    Z=[0,0,0,.1];%theta1, theta1 dot, theta 2, theta 2 dot
     t_span=[0:0.004:100];
     [t,zz]=ode45(@functions_integrate, t_span,Z);
 
     function states=functions_integrate(t,zz)
-        theta=zz(1);
-        dtheta=0.1; %rad/s
-        x=zz(3);
-        dx=r*cos(theta)*dtheta;
-        y=zz(5);
-        dy=r*sin(theta)*dtheta;
-        z=zz(7);
-        dz=omega;
-        theta=atan(x/y);
-        dtheta=atan(dx/dy);
-%         dtheta=(asin(dx/r)^2+acos(dy/r)^2)^.5;
+        dtheta1=omega; dtheta2=0;
+        ddtheta1=0; ddtheta2=0; 
+        theta1=zz(1);theta2=zz(2);
+        
+        amc1= (-l2*dtheta2^2) - (l1*(dtheta1^2)*cos(theta2-theta1)) + (l1*ddtheta1*sin(theta2-theta1));
+        amc2=(l2*ddtheta2) + (l1*dtheta1^2*sin(theta2-theta1)); % + (l1*ddtheta1*cos(theta2-theta1));
+        vmc1=zz(1);
+        vmc2=zz(2);
 
-        states=[theta;dtheta;x;dx;y;dy;z;dz];
+        states=[vmc1;amc1;vmc2;amc2];
     end
-
+thet1=zz(:,1);thet1dot=zz(:,2);thet2=zz(:,3);thet2dot=zz(:,4);
+x=sin(thet1)+sin(thet2);
+y=cos(thet1)+cos(thet2);
+    figure
+    hold
+    plot(x,y)
+    
+    figure
     hold all;
-    plot(t,zz(:,2));
-    plot(t,zz(:,1));
-    legend('dtheta/dt','theta')
+    plot(t,thet2,'m');
     xlabel('time (s)', 'FontSize', 16)
     ylabel('angle (rad)', 'FontSize', 16)
     title('Changing Angle with Time', 'FontSize', 20)
+    
+    figure
+    plot(t,thet2dot,'c');
+        xlabel('time (s)', 'FontSize', 16)
+    ylabel('d theta/d t (rad/s)', 'FontSize', 16)
+    title('Changing Angle Derivative with Time', 'FontSize', 20)
 end
