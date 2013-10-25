@@ -16,7 +16,7 @@ t_span=[0:0.004:10];
     %%
     function f=theta_fun(theta)
         g=9.8;
-        vi=100;
+        vi=30;
         f=(r*sin(theta)+r-.5*g*2*cos(theta)^2/omega)*(omega/2/cos(theta))-vi;
     end
 %% Find zeros:
