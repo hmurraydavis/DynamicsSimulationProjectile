@@ -1,72 +1,38 @@
-function res=E1_Q3_b()
-     t_span=[0:0.04:100];
+function caller
+    t_span=[0:0.004:100];
+    Z=[0,0,0,.02,0,-.01]; 
+    [t,zz]=ode45(@eqs_pt1, t_span,Z);
     
-    Z=[0,0,0,.02,0,-.01];
-    [tt,zp]=ode45(@eqs_pt1, t_span,Z);
-    
-      function state=eqs_pt1(T,Z)
-       t=T;
-       psi=Z(1);
-       theta=Z(3);
-       phi=Z(5);
 
-            % define matrices 
-            r1_321 = [ cos(psi),  sin(psi),  0; -sin(psi) cos(psi) 0; 0  0  1];
-            r2_321 = [ cos(theta), 0,  -sin(theta);  0,  1,  0; sin(theta), 0, cos(theta) ];
-            r3_321 = [ 1,  0,  0; 0,  cos(phi),  sin(phi);  0,  -sin(phi),  cos(phi)];
-            %
-        r_321 = r3_321*r2_321*r1_321;
+    function state=eqs_pt1(T,Z) %z=[psi,psidot,theta,thetadot,phi,phidot]
+        psi=Z(1); theta=Z(3); phi=Z(5);
 
-        R=[-.2*t^2;.5*t^2;30*t];
-        w=[0;.02;-.01];
-        w1=[0,0,0;0,.02,0;0,0,.01];
+        w=[Z(2);Z(4);Z(6)];
+
+        r1=[cos(psi), sin(psi),0;   -sin(psi),cos(psi),0;   0,0,1];
+        r2=[cos(theta),0,-sin(theta);   0,1,0;   sin(theta),0,cos(theta)];
+        r3=[1,0,0;   0,cos(phi),sin(phi);   0,-sin(phi),cos(phi)];
+        R=r3*r2*r1;
+
+        psiM=r1*w;
+        thetaM=r2*r1*w;
+        phiM=R*w;
+
+        Psi=psiM(3,1);
+        Theta=thetaM(2,1);
+        Phi=phiM(1,1);
         
-        %% get x eq:
-        mtx1=inv(r_321);
-        a1=mtx1*w;
-%         a1=(r_321^(-1))*w
-        x1=a1(1,1); y1=a1(2,1); z1=a1(3,1);
-
-
-        X=Z(2);Y=Z(4);ZZ=Z(6); % combined vels, integrated to pos inside function
-        state = [X;x1;Y;y1;ZZ;z1];
-      end %%Output is euler angles themselves
-  
-
-% % compute first derives of angels
-%     dpsi=diff(zp(:,2));
-%     dtheta=diff(zp(:,4));
-%     dphi=diff(zp(:,6));
-%     
-%     
-zp(length(zp),1)%*180/pi
-zp(length(zp),3)
-zp(length(zp),5)
-    %% All the pretty plots:
-    figure
-    % hold on;
-    subplot(3,1,1), plot(tt,zp(:,1),'r')
-    title('Changing Psi Angles with Time')
-    ylabel('Angle (rad)')
-    xlabel('Time (s)')
-    hold
-    subplot(3,1,2), plot(tt,zp(:,2),'c')
-    title('Theta')
-    ylabel('Angle (rad)')
-    xlabel('Time (s)')
-    subplot(3,1,3), plot(tt,zp(:,3),'b')
-    title('Phi')
-    ylabel('Angle (rad)')
-    xlabel('Time (s)')
+        IPsi=Z(2); ITheta=Z(4); IPhi=Z(6);
+        state= [IPsi;Psi;  ITheta;Theta;  IPhi;Phi];
+    end
     
-    figure
-    plot(tt,zp(:,1),'r')
-    hold
-    plot(tt,zp(:,3),'g')
-    plot(tt,zp(:,5),'b')
-    legend('phi', 'theta','psi')
-    ylabel('Angle (rad)')
-    xlabel('Time (s)')
-
+    hold all
+    plot(t,zz(:,1), 'LineWidth',3);
+    plot(t,zz(:,3), 'LineWidth',3);
+    plot(t,zz(:,5), 'LineWidth',3);
+    xlabel('Time (s)', 'FontSize', 16)
+    ylabel('Angle (rad)', 'FontSize', 16)
+    title('Changing Euler Angles Over Time', 'FontSize', 20)
+    legend('Psi', 'Theta','Phi')
 end
 
