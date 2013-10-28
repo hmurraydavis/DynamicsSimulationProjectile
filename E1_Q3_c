@@ -1,19 +1,17 @@
-% w=[0;.02;-.01];
-% r=[-.02;.5;30]
+psi= -2.6235;
+theta=0.7806;
+phi=-1.9971;
 
-z=[-.02,0,.5,.02,30,-.01]; %psi,dpsi,thets,dtheta,phi,dphi
+t=100;
+vplane=[-4;100;30];
+vperson=[-.1*sin(10);-.1*sin(10);0];
 
-%theta dot x r = v
+r1=[cos(psi), sin(psi),0;   -sin(psi),cos(psi),0;   0,0,1];
+r2=[cos(theta),0,-sin(theta);   0,1,0;   sin(theta),0,cos(theta)];
+r3=[1,0,0;   0,cos(phi),sin(phi);   0,-sin(phi),cos(phi)];
+R=r3*r2*r1;
 
-function state=eqs_pt1(T,z)
-    dpsi=z(2);
-    dtheta=z(4);
-    dphi=z(6);
-    
-    state=[dpsi;0;dtheta;0;dphi;0];
-end
+RI=inv(R);
+vpers_gnd=RI*vperson;
 
-vpsi=z(:,2).*z(:,1);
-vtheta=z(:,4).*z(:,3);
-vphi=z(:,6).*z(:,5);
-vtotal=sqrt( (vpsi.^2) + (vtheta.^2) + (dphi.^2) )
+VTOT=vplane+vpers_gnd
