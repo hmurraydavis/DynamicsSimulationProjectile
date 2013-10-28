@@ -1,0 +1,19 @@
+% w=[0;.02;-.01];
+% r=[-.02;.5;30]
+
+z=[-.02,0,.5,.02,30,-.01]; %psi,dpsi,thets,dtheta,phi,dphi
+
+%theta dot x r = v
+
+function state=eqs_pt1(T,z)
+    dpsi=z(2);
+    dtheta=z(4);
+    dphi=z(6);
+    
+    state=[dpsi;0;dtheta;0;dphi;0];
+end
+
+vpsi=z(:,2).*z(:,1);
+vtheta=z(:,4).*z(:,3);
+vphi=z(:,6).*z(:,5);
+vtotal=sqrt( (vpsi.^2) + (vtheta.^2) + (dphi.^2) )
