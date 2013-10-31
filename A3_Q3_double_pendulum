@@ -24,7 +24,7 @@ function A3_Q3_double_pendulum
 
     Z_0 = [z1_0, z2_0, z3_0, z4_0];
     % Define simulation parameters
-    t_span = [0:0.01:7];  % max time span for simulation 
+    t_span = [0:0.01:30];  % max time span for simulation 
 
     [t, zout] = ode45(@sphpend_fun, t_span, Z_0);
 
@@ -71,7 +71,7 @@ function A3_Q3_double_pendulum
         %
         states = [z1;z2;z3;z4];
         %
-    end
+    end 
 
 
 end
