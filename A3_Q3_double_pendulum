@@ -2,27 +2,25 @@ function A3_Q3_double_pendulum
     clear all
     close all
 
-    % Define system parameters; put in metric units
-    %
-    g = 9.81;              % gravitational acceleration in m/s^2
+    g = 9.81; % gravitational acceleration in m/s^2
     m1 = 3.0; m2=4; %kg
     l1=5; l2=3;
-    phi_0 = 30 * pi/180;              % initial phi value = 30 degrees, convert to rad
-    theta_0 = 45 * pi/180;
-    theta_dot_0 = 1/ (sin(phi_0)*l2);   % velocity component in theta direction = 0.5 m/s
-    %
+    theta1 = 30 * pi/180; %initial phi value = 30 degrees, convert to rad
+    theta2 = 45 * pi/180;
+    theta2_dot = 1/ (sin(theta1)*l2); %velocity component in theta direction = 0.5 m/s
+    
     % Define state variables: 
-    %  z1 = phi, z2 = d(phi)/dt, z3 = theta, z4 = d(theta)/dt
+    %  z1 = theta1, z2 = d(theta1)/dt, z3 = theta2, z4 = d(theta2)/dt
 
     % Specify initial conditions. 
-    z1_0 = phi_0;  
+    z1_0 = theta1;  
     z2_0 = 0; 
-    z3_0 = theta_0;    %
-    z4_0 = theta_dot_0;
+    z3_0 = theta2;    %
+    z4_0 = theta2_dot;
 
-    Z_0 = [z1_0, z2_0, z3_0, z4_0]; %
+    Z_0 = [z1_0, z2_0, 0,z3_0, z4_0,0]; %[t1,t1d,t1dd,t2,t2d,t2dd]
     % Define simulation parameters
-    t_span = [0:0.01:30];  % max time span for simulation 
+    t_span = [0:0.01:15];  % max time span for simulation 
 
     [t, zout] = ode45(@sphpend_fun, t_span, Z_0);
 
@@ -48,10 +46,11 @@ function A3_Q3_double_pendulum
     ylabel('y position (m)', 'FontSize', 16)
     title('Double Pendulum, 30, 0 degrees start', 'FontSize', 20)
 
-    function states = sphpend_fun(T, ZZ)
+    function states = sphpend_fun(T, ZZ) %ZZ=[t1,t1d,t1dd,t2,t2d,t2dd]
         % unpack vectors:
-        t1=ZZ(1); t2=ZZ(3);
-        t1d=ZZ(2); t2d=ZZ(4);
+        t1=ZZ(1); t2=ZZ(4);
+        t1d=ZZ(2); t2d=ZZ(5);
+        t1dd=ZZ(3); t2dd=ZZ(6);
         t1dd= ( -(m1+m2)*g*sin(t1)-m2*l2*t2dd*cos(t2-t1)+m2*l2*t2d^2*sin(t2-t1) )/(m1+m2)/l1;
         t2dd=( m2*l1*t1dd*cos(t2-t1)+m2*l1*t1d^2*sin(t2-t1)+m2*g*sin(t2) )/-m2/l2;
         
@@ -71,13 +70,8 @@ function A3_Q3_double_pendulum
         
         t2ddC= (n6+n7+n8+n9)/n10;
         
-        % solve simultaneously for theta and phi ( and dtheta/dt and dphi/dt)
-        z1 = ZZ(2); 
-        z2 = n1+n2+n3;
-        z3 = 0;
-        z4 = n4+n5+n6;
-        %
-        states = [z1;z2;z3;z4];
+       
+        states = [t1d;t1ddC;t1dd;t2d;t2ddC;t2dd];
         %
     end
 
