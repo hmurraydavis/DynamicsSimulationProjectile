@@ -12,7 +12,10 @@ function A3_Q3_double_pendulum
     coef_visc_dpng=2.3; %N*s/m
     coef_tta_viscous_damping=1.3; %N*s/rad; %N*s/rad
     Ig=0.00128688; % kg m^2;
-
+    velair=5; %m/s %can be changed at will
+    %q=.5*dens*v^2*A (A=l*cord)
+    q=.5*air_density*velair^2*l_airfoil*chord;
+    
     m=mplungue; d=d_eltocom; 
     ZZ=[6,30,.3,5]; %h,theta,hdot,theta dot
     
