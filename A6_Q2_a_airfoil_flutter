@@ -12,7 +12,7 @@ function A3_Q3_double_pendulum
     coef_visc_dpng=2.3; %N*s/m
     coef_tta_viscous_damping=1.3; %N*s/rad; %N*s/rad
     Ig=0.00128688; % kg m^2;
-    velair=5; %m/s %can be changed at will
+    velair=0; %m/s %can be changed at will
     %q=.5*dens*v^2*A (A=l*cord)
     q=.5*air_density*velair^2*l_airfoil*chord;
     
@@ -24,28 +24,28 @@ function A3_Q3_double_pendulum
     
     hold all;
     figure;
-    plot(t,zout(:,1),'r','LineWidth',3);
+    plot(t,zout(:,1),'g','LineWidth',2);
     legend('h')
     xlabel('time (s)', 'FontSize', 16)
     ylabel('vertical displacement (m)', 'FontSize', 16)
-    title('Vertical Displacement with Time', 'FontSize', 20)
+    title('Vertical Displacement with Time, Vair=0', 'FontSize', 20)
     
     figure;
-    plot(t,zout(:,2),'r','LineWidth',3)
+    plot(t,zout(:,2),'g','LineWidth',2)
     legend('theta');
     xlabel('time (s)', 'FontSize', 16)
     ylabel('angle (rad)', 'FontSize', 16)
-    title('Angle with Time', 'FontSize', 20)
+    title('Angle with Time, Vair=0', 'FontSize', 20)
     
     function states = sphpend_fun(T, ZZ) %%h,theta,hdot,theta dot   
         theta=ZZ(2); h=ZZ(1);
         thtadot=ZZ(4); hdot=ZZ(3);
         M1= [mplungue, mrot*d; mrot*d, Ig + (mrot*d^2)];
-        M2=[spring_stiffness,0;0,torsional_spring_stiffness]; % hk is derived from the plot of AngleOfAttack vs coeffient of lift. 2*pi is that slope. Only matters when air is on, though.
+        M2=-1*[spring_stiffness,0;0,torsional_spring_stiffness]+[0,q*2*pi;0,-e_elst_com*q*2*pi]; % hk is derived from the plot of AngleOfAttack vs coeffient of lift. 2*pi is that slope. Only matters when air is on, though.
         S=[h;theta];
 %         inv(M1)*M2*S
         Drag=[coef_visc_dpng*hdot;coef_tta_viscous_damping*thtadot];
-        B=( (inv(M1))*(-1*M2)*S )-Drag ;     
+        B=( (inv(M1))*(M2)*S )-Drag ;     
         
         states=[ZZ(3);ZZ(4);B(1);B(2)];
     end 
