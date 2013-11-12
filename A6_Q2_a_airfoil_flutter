@@ -21,14 +21,14 @@ function A3_Q3_double_pendulum
     
     hold all;
     figure;
-    plot(t,zout(:,1),'LineWidth',3);
+    plot(t,zout(:,1),'r','LineWidth',3);
     legend('h')
     xlabel('time (s)', 'FontSize', 16)
     ylabel('vertical displacement (m)', 'FontSize', 16)
     title('Vertical Displacement with Time', 'FontSize', 20)
     
     figure;
-    plot(t,zout(:,2),'LineWidth',3)
+    plot(t,zout(:,2),'r','LineWidth',3)
     legend('theta');
     xlabel('time (s)', 'FontSize', 16)
     ylabel('angle (rad)', 'FontSize', 16)
@@ -36,11 +36,13 @@ function A3_Q3_double_pendulum
     
     function states = sphpend_fun(T, ZZ) %%h,theta,hdot,theta dot   
         theta=ZZ(2); h=ZZ(1);
+        thtadot=ZZ(4); hdot=ZZ(3);
         M1= [mplungue, mrot*d; mrot*d, Ig + (mrot*d^2)];
         M2=[spring_stiffness,0;0,torsional_spring_stiffness]; % hk is derived from the plot of AngleOfAttack vs coeffient of lift. 2*pi is that slope. Only matters when air is on, though.
         S=[h;theta];
 %         inv(M1)*M2*S
-        B=(inv(M1))*(-1*M2)*S  ;     
+        Drag=[coef_visc_dpng*hdot;coef_tta_viscous_damping*thtadot];
+        B=( (inv(M1))*(-1*M2)*S )-Drag ;     
         
         states=[ZZ(3);ZZ(4);B(1);B(2)];
     end 
