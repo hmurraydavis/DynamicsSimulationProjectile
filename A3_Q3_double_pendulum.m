@@ -2,6 +2,8 @@ function A3_Q3_double_pendulum
     clear all
     close all
 
+    at1=[]; at2=[]
+
     g = 9.81; % gravitational acceleration in m/s^2
     m1 = 3.0; m2=4; %kg
     l1=5; l2=3;
@@ -29,22 +31,51 @@ function A3_Q3_double_pendulum
     t11=zout(:,1);t22=zout(:,3);
     x1 =l1.*sin(t11); x2=x1-(l2.*sin(t22));
     y1=l1.*cos(t11); y2=y1+(l2*cos(t22));
+    
+    % x-y velocity in cartesian coordinates
+    vt11=zout(:,2);vt22=zout(:,4);
+    vx1 =l1.*sin(vt11); vx2=vx1-(l2.*sin(vt22));
+    vy1=l1.*cos(vt11); vy2=vy1+(l2*cos(vt22));
+    
+    % x-y acceleration in cartesian coordinates
+    ax1 =l1.*sin(at1); ax2=ax1-(l2.*sin(at2));
+    ay1=l1.*cos(at1); ay2=ay1+(l2*cos(at2));
 
-%     hold all
-%     plot(GPE+KE)
-%     plot(KE)
-%     plot(GPE)
-%     xlabel('Time (s)', 'FontSize', 16)
-%     ylabel('Energy (J)', 'FontSize', 16)
-%     title('Total Energy of a 2D pendulum, 30 degrees start', 'FontSize', 20)
-%     legend('Gravitational and Kinetic Energy','Kinetic Energy','Gravitational Energy')
-    hold all
-    plot(x1,-y1)
-    plot(x2,-y2)
-    legend('Upper Pendulum', 'Lower Pendulum')
-    xlabel('x position (m)', 'FontSize', 16)
-    ylabel('y position (m)', 'FontSize', 16)
-    title('Double Pendulum, 30, 0 degrees start', 'FontSize', 20)
+     hold on
+    figure;
+    %energy graph
+         plot(GPE+KE)
+         plot(KE)
+         plot(GPE)
+         xlabel('Time (s)', 'FontSize', 16)
+         ylabel('Energy (J)', 'FontSize', 16)
+         title('Total Energy of a 2D pendulum, 30 degrees start', 'FontSize', 20)
+         legend('Gravitational and Kinetic Energy','Kinetic Energy','Gravitational Energy')
+    
+    figure;
+    %position graph
+        plot(x1,-y1)
+        plot(x2,-y2)
+        legend('Upper Pendulum', 'Lower Pendulum')
+        xlabel('x position (m)', 'FontSize', 16)
+        ylabel('y position (m)', 'FontSize', 16)
+        title('Double Pendulum, 30, 0 degrees start', 'FontSize', 20)
+
+    figure;
+    %velocity graph
+        plot(t,vx1);
+        plot(t,vy1);
+        plot(t,vx2);
+        plot(t,vy2);
+        legend('X velocity--Upper Pendulum','Y velocity--Upper Pendulum', 'X velocity--Lower Pendulum','Y velocity--Lower Pendulum')
+        xlabel('Time (s)', 'FontSize', 16)
+        ylabel('Velocity (m/s)', 'FontSize', 16)
+        title('Velocity Double Pendulum, 30, 0 degrees start', 'FontSize', 20)
+
+    figure;
+    %acceleration graph
+        plot(ax1,ay1);
+        plot()
 
     function states = sphpend_fun(T, ZZ) %ZZ=[t1,t1d,t1dd,t2,t2d,t2dd]
         % unpack vectors:
@@ -69,6 +100,7 @@ function A3_Q3_double_pendulum
         n10= (-1*m2^2*cos(t2-t1)^2*l2/(m1+m2))+(m2*l2); %denom
         
         t2ddC= (n6+n7+n8+n9)/n10;
+        at1=[at1,t1ddC]; at2=[at2.t2ddC];
         
        
         states = [t1d;t1ddC;t1dd;t2d;t2ddC;t2dd];
