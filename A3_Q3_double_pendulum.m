@@ -59,8 +59,8 @@ function A3_Q3_double_pendulum
     
     figure;
     %position graph
-        plot(x1,-y1)
-        plot(x2,-y2)
+        plot3(x1,-y1,t);
+        plot3(x2,-y2,t);
         legend('Upper Pendulum', 'Lower Pendulum')
         xlabel('x position (m)', 'FontSize', 16)
         ylabel('y position (m)', 'FontSize', 16)
