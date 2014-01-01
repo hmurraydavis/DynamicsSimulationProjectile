@@ -83,6 +83,15 @@ function A3_Q3_double_pendulum
         ylabel('Acceleration (m/s^2)', 'FontSize', 16)
         title('Acceleration Double Pendulum, 30, 0 degrees start', 'FontSize', 20)
 
+    figure;
+    %Rod tension graph:
+        plot(linspace(0,length(at1)), at1*m1);
+        plot(linspace(0,length(at2)), at2*m2);
+        legend('Tension Rod 1','Tension Rod 2')
+        xlabel('Time (s)', 'FontSize', 16)
+        ylabel('Tension (N)', 'FontSize', 16)
+        title('Rod Tension Double Pendulum, 30, 0 degrees start', 'FontSize', 20)
+
     function states = sphpend_fun(T, ZZ) %ZZ=[t1,t1d,t1dd,t2,t2d,t2dd]
         % unpack vectors:
         t1=ZZ(1); t2=ZZ(4);
