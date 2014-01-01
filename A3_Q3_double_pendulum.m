@@ -41,6 +41,10 @@ function A3_Q3_double_pendulum
     ax1 =l1.*sin(at1); ax2=ax1-(l2.*sin(at2));
     ay1=l1.*cos(at1); ay2=ay1+(l2*cos(at2));
 
+    %acceleration at pivots:
+    apx1 =sin(at1); apx2=apx1-(sin(at2));
+    apy1=cos(at1); apy2=apy1+(cos(at2));
+
      hold on
     figure;
     %energy graph
@@ -91,6 +95,17 @@ function A3_Q3_double_pendulum
         xlabel('Time (s)', 'FontSize', 16)
         ylabel('Tension (N)', 'FontSize', 16)
         title('Rod Tension Double Pendulum, 30, 0 degrees start', 'FontSize', 20)
+
+    figure;
+    %reaction force at pivots graph
+        plot(linspace(0,length(apx1)),m1*apx1);
+        plot(linspace(0,length(apy1)),m1*apy1);
+        plot(linspace(0,length(apx2)),m2*apx2);
+        plot(linspace(0,length(apy2)),m2*apy2);
+        legend('X Reaction--Upper Pivot','Y Reaction--Upper Pivot', 'X Reaction--Lower Pivot','Y Reaction--Lower Pivot')
+        xlabel('Time (s)', 'FontSize', 16)
+        ylabel('Force (N)', 'FontSize', 16)
+        title('Pivotal Reaction Forces Double Pendulum, 30, 0 degrees start', 'FontSize', 20)
 
     function states = sphpend_fun(T, ZZ) %ZZ=[t1,t1d,t1dd,t2,t2d,t2dd]
         % unpack vectors:
