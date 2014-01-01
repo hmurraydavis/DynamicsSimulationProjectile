@@ -74,8 +74,14 @@ function A3_Q3_double_pendulum
 
     figure;
     %acceleration graph
-        plot(ax1,ay1);
-        plot()
+        plot(linspace(0,length(ax1)),ax1);
+        plot(linspace(0,length(ay1)),ay1);
+        plot(linspace(0,length(ax2)),ax2);
+        plot(linspace(0,length(ay2)),ay2);
+        legend('X acceleration--Upper Pendulum','Y acceleration--Upper Pendulum', 'X acceleration--Lower Pendulum','Y acceleration--Lower Pendulum')
+        xlabel('Time (s)', 'FontSize', 16)
+        ylabel('Acceleration (m/s^2)', 'FontSize', 16)
+        title('Acceleration Double Pendulum, 30, 0 degrees start', 'FontSize', 20)
 
     function states = sphpend_fun(T, ZZ) %ZZ=[t1,t1d,t1dd,t2,t2d,t2dd]
         % unpack vectors:
