@@ -2,7 +2,8 @@ function A3_Q3_double_pendulum
     clear all
     close all
 
-    at1=[]; at2=[]
+    at1=[]; at2=[];
+    tens1=[];tens2=[];
 
     g = 9.81; % gravitational acceleration in m/s^2
     m1 = 3.0; m2=4; %kg
@@ -89,8 +90,8 @@ function A3_Q3_double_pendulum
 
     figure;
     %Rod tension graph:
-        plot(linspace(0,length(at1)), at1*m1);
-        plot(linspace(0,length(at2)), at2*m2);
+        plot(linspace(0,length(tens1)), tens1);
+        plot(linspace(0,length(tens2)), tens2);
         legend('Tension Rod 1','Tension Rod 2')
         xlabel('Time (s)', 'FontSize', 16)
         ylabel('Tension (N)', 'FontSize', 16)
@@ -131,6 +132,10 @@ function A3_Q3_double_pendulum
         
         t2ddC= (n6+n7+n8+n9)/n10;
         at1=[at1,t1ddC]; at2=[at2.t2ddC];
+
+        Ftens2=(m1*l1*t1ddC+m1*g*sin(t1))/(sin(t2-t1));
+        Ftens1=(Ftens2*cos(t2-t1))+(m1*g*cos(t1))+(m1*l1*t1d^2);
+        tens2=[tens2,Ftens2]; tens1=[tens1,Ftens1]
         
        
         states = [t1d;t1ddC;t1dd;t2d;t2ddC;t2dd];
