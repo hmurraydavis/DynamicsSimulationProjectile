@@ -31,8 +31,8 @@ def A4Q2_sphpend_fun(T, ZZ):
     t1=ZZ[0]; t2=ZZ[3];
     t1d=ZZ[1]; t2d=ZZ[4];
     t1dd=ZZ[2]; t2dd=ZZ[5];
-    #t1dd= ( -(m1+m2)*g*sin(t1)-m2*l2*t2dd*cos(t2-t1)+m2*l2*t2d**2*sin(t2-t1) )/(m1+m2)/l1;
-    #t2dd=( m2*l1*t1dd*cos(t2-t1)+m2*l1*t1d**2*sin(t2-t1)+m2*g*sin(t2) )/-m2/l2;
+    ##t1dd= ( -(m1+m2)*g*sin(t1)-m2*l2*t2dd*cos(t2-t1)+m2*l2*t2d**2*sin(t2-t1) )/(m1+m2)/l1;
+    ##t2dd=( m2*l1*t1dd*cos(t2-t1)+m2*l1*t1d**2*sin(t2-t1)+m2*g*sin(t2) )/-m2/l2;
     
     mm1 = np.matrix([[m2*l1*cos(t2-t1),  m2*l1],
                      [(m1+m2)*l1,        m2*l2*cos(t2-t1)]]) #my matrix 1
@@ -43,25 +43,10 @@ def A4Q2_sphpend_fun(T, ZZ):
     t1dd = ans[0]
     t2dd = ans[1]
 
-    n1=-1*(m1+m2)*g*sin(t1);
-    n2=-m2*l2*t2d**2*sin(t2-t1);
-    n3=m2*g*sin(t2)*cos(t2-t1);
-    n4=-m2*l1*t1d**2*sin(t2-t1)*cos(t2-t1);
-    n5=(m1+m2)*l1-m2*l1*cos(t2-t1)**2;
-    
-    t1ddC=(n1+n2+n3+n4)/n5;
-    
-    n6= m2*g*sin(t1)*cos(t2-t1);
-    n7= -m2**2*l2*t2d**2*sin(t2-t1)*cos(t2-t1);
-    n8= -m2*g*sin(t2);
-    n9= -m2*l1*t1d**2*sin(t2-t1);
-    n10= (-1*m2**2*cos(t2-t1)**2*l2/(m1+m2))+(m2*l2); #denom
-    
-    t2ddC= (n6+n7+n8+n9)/n10;
-    at1 += [t1ddC]
-    at2 += [t2ddC];
+    at1 += [t1dd]
+    at2 += [t2dd];
 
-    Ftens2=(m1*l1*t1ddC+m1*g*sin(t1))/(sin(t2-t1));
+    Ftens2=(m1*l1*t1dd+m1*g*sin(t1))/(sin(t2-t1));
     Ftens1=(Ftens2*cos(t2-t1))+(m1*g*cos(t1))+(m1*l1*t1d**2);
     tens2 += [Ftens2]
     tens1 += [Ftens1]
@@ -69,17 +54,16 @@ def A4Q2_sphpend_fun(T, ZZ):
     n = len(ZZ)
     dydt = np.zeros((n,1))
     dydt[0] = t1d
-    dydt[1] = t1ddC
+    dydt[1] = t1dd
     dydt[2] = t1dd
     dydt[3] = t2d
-    dydt[4] = t2ddC
+    dydt[4] = t2dd
     dydt[5] = t2dd
     
     return dydt
-    #return mat[[t1d],[t1ddC],[t1dd],[t2d],[t2ddC],[t2dd]]
 
-r = integrate.ode(A4Q2_sphpend_fun).set_integrator('dopri5')
-#r = integrate.ode(A4Q2_sphpend_fun).set_integrator('vode', method='bdf')
+#r = integrate.ode(A4Q2_sphpend_fun).set_integrator('dopri5')
+r = integrate.ode(A4Q2_sphpend_fun).set_integrator('vode', method='bdf')
 
 t_start = 0.0
 t_final = 15.0
@@ -132,41 +116,10 @@ vy1=l1 * cos(vt11)
 vy2=vy1+(dot(l2, cos(vt22)))
 
 # x-y acceleration in cartesian coordinates
+print(at1)
 ax1 =l1*sin(at1); ax2=ax1-(l2*sin(at2));
 ay1=l1*cos(at1); ay2=ay1+(dot(l2, cos(at2)));
 
 #acceleration at pivots:
 apx1 =sin(at1); apx2=apx1-(sin(at2));
 apy1=cos(at1); apy2=apy1+(cos(at2));
-
-plot(t, x1)
-xlabel("time")
-ylabel("x1 position")
-show()
-
-plot(t, y1)
-xlabel("time")
-ylabel("y1 position")
-show()
-
-plot(t, x2)
-xlabel("time")
-ylabel("x2 position")
-show()
-
-plot(t, y2)
-xlabel("time")
-ylabel("y2 position")
-show()
-
-plot(t,vx1)
-plot(t,vx2)
-ylabel('Velocity (m/s)')
-title('Velocity Double Pendulum, 30, 0 degrees start')
-show()
-
-plot(ax1)
-plot(ax2)
-xlabel('Time (s)')
-ylabel('Acceleration (m/s**2)')
-show()
