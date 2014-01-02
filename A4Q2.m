@@ -1,8 +1,8 @@
     clear all
     close all
 
-    at1=[]; at2=[];
-    tens1=[];tens2=[];
+    global at1=[]; global at2=[];
+    global tens1=[]; global tens2=[];
 
     g = 9.81; % gravitational acceleration in m/s^2
     m1 = 3.0; m2=4; %kg
