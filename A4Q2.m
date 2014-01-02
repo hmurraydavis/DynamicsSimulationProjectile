@@ -24,7 +24,7 @@
     % Define simulation parameters
     t_span = [0:0.01:15];  % max time span for simulation 
 
-    [t, zout] = ode45(@sphpend_fun, t_span, Z_0);
+    [t, zout] = ode45(@A4Q2sphpend_fun, t_span, Z_0);
 
 
     % x-y position in cartesian coordinates
