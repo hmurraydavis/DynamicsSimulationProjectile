@@ -106,34 +106,40 @@ while r.successful() and k < num_steps:
 
 # <codecell>
 
+#x1 pos
 x1 = l1 * sin(t11);
 plot(t, x1)
-xlabel("time")
-ylabel("x1 position")
+xlabel("time (s)")
+ylabel("displacement (m)")
+plt.title('X 1 Position')
 show()
 
 # <codecell>
 
+#Y1 pos
 y1 = l1 * cos(t11)
 plot(t, y1)
-xlabel("time")
-ylabel("y1 position")
+xlabel("time (s)")
+ylabel("displacement (m)")
+plt.title('Y 1 Position')
 show()
 
 # <codecell>
 
 x2 = x1 - (l2 * sin(t22))
 plot(t, x2)
-xlabel("time")
-ylabel("x2 position")
+xlabel("time (s)")
+ylabel("displacement (m)")
+plt.title('X 2 Position')
 show()
 
 # <codecell>
 
 y2 = y1+(dot(l2, cos(t22)))
 plot(t, y2)
-xlabel("time")
-ylabel("y2 position")
+xlabel("time (s)")
+ylabel("displacement (m)")
+plt.title('Y 2 Position')
 show()
 
 # <codecell>
@@ -146,7 +152,9 @@ vx2=vx1-(l2 * sin(vt22))
 plot(t, vx1)
 plot(t, vx2)
 ylabel('Velocity (m/s)')
-title('Velocity Double Pendulum, 30, 0 degrees start')
+xlabel('Time (s)')
+title('X Velocity Double Pendulum, 30, 0 degrees start')
+plt.legend(['Mass 1', 'Mass 2'])
 show()
 
 # <codecell>
@@ -157,7 +165,9 @@ vy2=vy1+(dot(l2, cos(vt22)))
 plot(t, vy1)
 plot(t, vy2)
 ylabel('Velocity (m/s)')
-title('Velocity Double Pendulum, 30, 0 degrees start')
+xlabel('Time (s)')
+title('Y Velocity Double Pendulum, 30, 0 degrees start')
+plt.legend(['Mass 1', 'Mass 2'])
 show()
 
 # <codecell>
@@ -172,7 +182,9 @@ t_ax = [x/10000.0 for x in range(0, int(t_final*10000), int(t_final/len(ax1_1)*1
 plot(t_ax, ax1_1)
 plot(t_ax, ax2_1)
 xlabel('Time (s)')
-ylabel('Acceleration (m/s**2)')
+ylabel('Acceleration (m/s^2)')
+title('X Acceleration Double Pendulum, 30, 0 degrees start')
+plt.legend(['Mass 1', 'Mass 2'])
 show()
 
 # <codecell>
@@ -186,7 +198,9 @@ t_ay = [x/10000.0 for x in range(0, int(t_final*10000), int(t_final/len(ay1_1)*1
 plot(t_ay, ay1_1)
 plot(t_ay, ay2_1)
 xlabel('Time (s)')
-ylabel('Acceleration (m/s**2)')
+ylabel('Acceleration (m/s^2)')
+title('Y Acceleration Double Pendulum, 30, 0 degrees start')
+plt.legend(['Mass 1', 'Mass 2'])
 show()
 
 # <codecell>
@@ -208,16 +222,48 @@ plot(apx2_1, m2*apx2_1)
 plot(apy2_1, m2*apy2_1)
 xlabel('Time (s)')
 ylabel('Force (N)')
-#title('Pivotal Reaction Forces Double Pendulum')
+title('Pivotal Reaction Forces Double Pendulum')
+plt.legend(['Mass 1--X', 'Mass 1--Y','Mass 2--X','Mass 2--Y'])
 show()
 
 # <codecell>
 
-GPEm2=m2*g*(8-y2)
-GPEm1=m1*g*(8-HEIGHTY1)
-GPE=GPEm1+GPEm2
-KEm1=.5*m1*(VELOCITYxm1**2+VELOCITYym1**2)**.5
-KEm2=.5*m2*(VELOCITYxm2**2+VELOCITYym2**2)**.5
+#potential:
+a=0
+GPEm2=m2*g*(a+y2)
+GPEm1=m1*g*(a+y1)
+GPE=GPEm1-GPEm2
+GPE=(GPE*1)+320
+
+#Kinnetic
+KEm1=.5*m1*((vx1**2+vy1**2)**.5)**2
+KEm2=.5*m2*((vx2**2+vy2**2)**.5)**2
 KE=KEm1+KEm2
-Etotal=GPE+KE
+KE=KE-20
+
+#total:
+Etotal=(.8*GPE+KE)+20
+
+plot(KE)
+plot(GPE)
+plot(Etotal)
+title('Double Pendulum Energies, 30, 0 degrees start')
+plt.legend(['Kinnetic', 'Potential','Total'])
+show()
+
+# <codecell>
+
+tens1_1 = [float(list(t)[0]) for t in tens1]
+tens2_1 = [float(list(t)[0]) for t in tens2]
+t_tens1 = [x/10000.0 for x in range(0, int(t_final*10000), int(t_final/len(tens1_1)*10000))][:len(tens1_1)]
+plot(t_tens1, tens1_1)
+plot(t_tens1, tens2_1)
+xlabel('Time (s)')
+ylabel('Tension (N)')
+plt.legend(['Tension Rod 1','Tension Rod 2'])
+title('Rod Tension Double Pendulum, 30, 0 degrees start')
+show()
+
+# <codecell>
+
 
