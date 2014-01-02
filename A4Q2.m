@@ -24,7 +24,7 @@
     % Define simulation parameters
     t_span = [0:0.01:15];  % max time span for simulation 
 
-    [t, zout] = ode45(@A4Q2sphpend_fun, t_span, Z_0);
+    [t, zout] = ode45(@A4Q2_sphpend_fun, t_span, Z_0);
 
 
     % x-y position in cartesian coordinates
@@ -109,7 +109,7 @@
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-function states = A4Q2sphpend_fun(T, ZZ) %ZZ=[t1,t1d,t1dd,t2,t2d,t2dd]
+function states = A4Q2_sphpend_fun(T, ZZ) %ZZ=[t1,t1d,t1dd,t2,t2d,t2dd]
     
     g = 9.81; % gravitational acceleration in m/s^2
     m1 = 3.0; m2=4; %kg
