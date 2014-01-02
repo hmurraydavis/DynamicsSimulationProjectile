@@ -1,6 +1,3 @@
-    clear all
-    close all
-
     global at1=[]; global at2=[];
     global tens1=[]; global tens2=[];
 
