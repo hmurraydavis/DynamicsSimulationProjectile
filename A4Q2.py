@@ -1,3 +1,8 @@
+# -*- coding: utf-8 -*-
+# <nbformat>3.0</nbformat>
+
+# <codecell>
+
 from math import pi, sin
 import numpy as np
 from scipy import integrate
@@ -62,8 +67,8 @@ def A4Q2_sphpend_fun(T, ZZ):
     
     return dydt
 
-#r = integrate.ode(A4Q2_sphpend_fun).set_integrator('dopri5')
-r = integrate.ode(A4Q2_sphpend_fun).set_integrator('vode', method='bdf')
+r = integrate.ode(A4Q2_sphpend_fun).set_integrator('dopri5')
+#r = integrate.ode(A4Q2_sphpend_fun).set_integrator('vode', method='bdf')
 
 t_start = 0.0
 t_final = 15.0
@@ -96,30 +101,89 @@ while r.successful() and k < num_steps:
     t11[k] = r.y[0]
     t22[k] = r.y[2]
     k += 1
-# All done!  Plot the trajectories:
-#plot(t, zout)
-'''grid('on')
-xlabel('Time [minutes]')
-ylabel('Concentration [mol/L]')'''
+    
+vy1=l1 * cos(vt11)
+vy2=vy1+(dot(l2, cos(vt22)))
 
-# x-y position in cartesian coordinates
+# x-y acceleration in cartesian coordinates
+
+ay1=l1*cos(at1); ay2=ay1+(dot(l2, cos(at2)))
+
+#acceleration at pivots:
+apx1 =sin(at1); apx2=apx1-(sin(at2));
+apy1=cos(at1); apy2=apy1+(cos(at2));
+
+# <codecell>
+
 x1 = l1 * sin(t11);
-x2 = x1 - (l2 * sin(t22))
+plot(t, x1)
+xlabel("time")
+ylabel("x1 position")
+show()
+
+# <codecell>
+
 y1 = l1 * cos(t11)
+plot(t, y1)
+xlabel("time")
+ylabel("y1 position")
+show()
+
+# <codecell>
+
+x2 = x1 - (l2 * sin(t22))
+plot(t, x2)
+xlabel("time")
+ylabel("x2 position")
+show()
+
+# <codecell>
+
 y2 = y1+(dot(l2, cos(t22)))
+plot(t, y2)
+xlabel("time")
+ylabel("y2 position")
+show()
+
+# <codecell>
 
 # x-y velocity in cartesian coordinates
 
 vx1 =l1 * sin(vt11)
 vx2=vx1-(l2 * sin(vt22))
-vy1=l1 * cos(vt11)
-vy2=vy1+(dot(l2, cos(vt22)))
 
-# x-y acceleration in cartesian coordinates
-print(at1)
-ax1 =l1*sin(at1); ax2=ax1-(l2*sin(at2));
-ay1=l1*cos(at1); ay2=ay1+(dot(l2, cos(at2)));
+plot(t,vx1)
+plot(t,vx2)
+ylabel('Velocity (m/s)')
+title('Velocity Double Pendulum, 30, 0 degrees start')
+show()
 
-#acceleration at pivots:
-apx1 =sin(at1); apx2=apx1-(sin(at2));
-apy1=cos(at1); apy2=apy1+(cos(at2));
+# <codecell>
+
+ax1 = l1*sin(at1)
+ax2 = ax1-(l2*sin(at2))
+
+ax1_1 = ax1[:,0]
+ax2_1 = ax2[:,0]
+
+t_ax = [x/10000.0 for x in range(0, int(t_final*10000), int(t_final/len(ax1_1)*10000))][:len(ax1_1)]
+plot(t_ax, ax1_1)
+plot(t_ax, ax2_1)
+xlabel('Time (s)')
+ylabel('Acceleration (m/s**2)')
+show()
+
+# <codecell>
+
+ay1_1 = ay1[:,0]
+ay2_1 = ay2[:,0]
+t_ay = [x/10000.0 for x in range(0, int(t_final*10000), int(t_final/len(ay1_1)*10000))][:len(ay1_1)]
+plot(t_ay, ay1_1)
+plot(t_ay, ay2_1)
+xlabel('Time (s)')
+ylabel('Acceleration (m/s**2)')
+show()
+
+# <codecell>
+
+
