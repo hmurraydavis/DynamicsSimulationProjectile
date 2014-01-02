@@ -100,18 +100,9 @@ while r.successful() and k < num_steps:
     zout[k] = r.y[0]
     t11[k] = r.y[0]
     t22[k] = r.y[2]
+    vt11[k] = r.y[1]
+    vt22[k] = r.y[3]
     k += 1
-    
-vy1=l1 * cos(vt11)
-vy2=vy1+(dot(l2, cos(vt22)))
-
-# x-y acceleration in cartesian coordinates
-
-ay1=l1*cos(at1); ay2=ay1+(dot(l2, cos(at2)))
-
-#acceleration at pivots:
-apx1 =sin(at1); apx2=apx1-(sin(at2));
-apy1=cos(at1); apy2=apy1+(cos(at2));
 
 # <codecell>
 
@@ -152,8 +143,19 @@ show()
 vx1 =l1 * sin(vt11)
 vx2=vx1-(l2 * sin(vt22))
 
-plot(t,vx1)
-plot(t,vx2)
+plot(t, vx1)
+plot(t, vx2)
+ylabel('Velocity (m/s)')
+title('Velocity Double Pendulum, 30, 0 degrees start')
+show()
+
+# <codecell>
+
+vy1=l1 * cos(vt11)
+vy2=vy1+(dot(l2, cos(vt22)))
+
+plot(t, vy1)
+plot(t, vy2)
 ylabel('Velocity (m/s)')
 title('Velocity Double Pendulum, 30, 0 degrees start')
 show()
@@ -175,6 +177,9 @@ show()
 
 # <codecell>
 
+ay1=l1*cos(at1)
+ay2=ay1+(dot(l2, cos(at2)))
+
 ay1_1 = ay1[:,0]
 ay2_1 = ay2[:,0]
 t_ay = [x/10000.0 for x in range(0, int(t_final*10000), int(t_final/len(ay1_1)*10000))][:len(ay1_1)]
@@ -186,4 +191,33 @@ show()
 
 # <codecell>
 
+#acceleration at pivots:
+apx1 =sin(at1)
+apx2=apx1-(sin(at2))
+apy1=cos(at1)
+apy2=apy1+(cos(at2))
+
+apx1_1 = apx1[:,0]
+apx2_1 = apx2[:,0]
+apy1_1 = apy1[:,0]
+apy2_1 = apy2[:,0]
+
+plot(apx1_1, m1*apx1_1)
+plot(apy1_1, m1*apy1_1)
+plot(apx2_1, m2*apx2_1)
+plot(apy2_1, m2*apy2_1)
+xlabel('Time (s)')
+ylabel('Force (N)')
+#title('Pivotal Reaction Forces Double Pendulum')
+show()
+
+# <codecell>
+
+GPEm2=m2*g*(8-y2)
+GPEm1=m1*g*(8-HEIGHTY1)
+GPE=GPEm1+GPEm2
+KEm1=.5*m1*(VELOCITYxm1**2+VELOCITYym1**2)**.5
+KEm2=.5*m2*(VELOCITYxm2**2+VELOCITYym2**2)**.5
+KE=KEm1+KEm2
+Etotal=GPE+KE
 
