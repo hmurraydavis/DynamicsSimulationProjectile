@@ -1,5 +1,9 @@
 function states = A4Q2sphpend_fun(T, ZZ) %ZZ=[t1,t1d,t1dd,t2,t2d,t2dd]
     
+    g = 9.81; % gravitational acceleration in m/s^2
+    m1 = 3.0; m2=4; %kg
+    l1=5; l2=3;
+
     % unpack vectors:
     t1=ZZ(1); t2=ZZ(4);
     t1d=ZZ(2); t2d=ZZ(5);
